@@ -1,10 +1,10 @@
 plugins {
     id 'java'
-    id 'application'
 }
 
+
 dependencies {
-    compile project(':CM:CM')
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
+
 
