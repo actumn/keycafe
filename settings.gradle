@@ -15,3 +15,5 @@ include 'common'
 include 'coordinate-server'
 include 'server'
 include 'client'
+include 'examples:auth-server'
+
