@@ -1,0 +1,11 @@
+{
+  "name": "auth-web",
+  "version": "1.0.0",
+  "description": "keycafe example application web client",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "actumn814@gmail.com",
+  "license": "ISC"
+}

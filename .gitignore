@@ -26,3 +26,5 @@ build
 *.rar
 
 .idea
+
+node_modules
