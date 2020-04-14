@@ -1,4 +1,4 @@
-package io.keycafe.client;
+package examples;
 
 import java.util.*;
 import java.awt.*;

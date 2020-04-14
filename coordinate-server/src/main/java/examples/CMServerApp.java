@@ -1,4 +1,4 @@
-package io.keycafe.server;
+package examples;
 
 import kr.ac.konkuk.ccslab.cm.entity.CMGroup;
 import kr.ac.konkuk.ccslab.cm.entity.CMList;

@@ -1,4 +1,4 @@
-package io.keycafe.client;
+package examples;
 
 import java.io.*;
 import java.nio.ByteBuffer;

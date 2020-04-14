@@ -1,4 +1,4 @@
-package io.keycafe.client;
+package examples;
 
 import java.util.ArrayList;
 import java.util.Iterator;

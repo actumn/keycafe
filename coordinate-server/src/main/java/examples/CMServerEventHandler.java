@@ -1,4 +1,4 @@
-package io.keycafe.server;
+package examples;
 
 import kr.ac.konkuk.ccslab.cm.event.CMDummyEvent;
 import kr.ac.konkuk.ccslab.cm.event.CMEvent;

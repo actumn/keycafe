@@ -12,5 +12,6 @@ rootProject.name = dirName
 
 include 'CM:CM'
 include 'common'
+include 'coordinate-server'
 include 'server'
 include 'client'
