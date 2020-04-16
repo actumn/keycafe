@@ -1,4 +1,4 @@
 package io.keycafe.coordinate;
 
-public class Main {
+public class ServerEventHandler {
 }

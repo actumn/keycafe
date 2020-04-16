@@ -1,41 +1,97 @@
 package io.keycafe.client.network;
 
-import io.keycafe.client.network.protocol.Protocol;
-import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.*;
-import io.netty.channel.nio.NioEventLoopGroup;
-import io.netty.channel.socket.SocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
+import io.keycafe.common.Protocol;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.Closeable;
+import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 
-/*
-prototype 으로 빠르게 구현해 보기 위해 netty 를 사용.
-TODO:: blocking-IO 를 구현할 거라서 socket 을 쓰는 것으로 변경
-Jedis 참고 (https://github.com/xetorthio/jedis/blob/master/src/main/java/redis/clients/jedis/Connection.java)
- */
-public class Connection {
-    Channel channel;
+public class Connection implements Closeable {
+    private final String host;
+    private final int port;
 
-    public void connect() throws InterruptedException {
-        InetSocketAddress remote = new InetSocketAddress("127.0.0.1", Protocol.DEFAULT_PORT);
+    private Socket socket;
+    private BufferedInputStream inputStream;
+    private BufferedOutputStream outputStream;
 
-        EventLoopGroup group = new NioEventLoopGroup(1);
-        Bootstrap bootstrap = new Bootstrap()
-                .group(group)
-                .channel(NioSocketChannel.class)
-                .handler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel ch) throws Exception {
-                        ChannelPipeline pipeline = ch.pipeline();
-
-                    }
-                });
-
-        channel = bootstrap.connect(remote).sync().channel();
+    public Connection() {
+        this("localhost");
     }
 
-    public void send() {
-        // 뭘 보내지 ..?
+    public Connection(String host) {
+        this(host, Protocol.DEFAULT_PORT);
+    }
+
+    public Connection(String host, int port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    public void connect() {
+        if (!isConnected()) {
+            try {
+                socket = new Socket();
+
+                socket.setReuseAddress(true);
+                socket.setKeepAlive(true);
+                socket.setTcpNoDelay(true);
+
+                socket.connect(new InetSocketAddress(host, port));
+
+                inputStream = new BufferedInputStream(socket.getInputStream());
+                outputStream = new BufferedOutputStream(socket.getOutputStream());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public boolean isConnected() {
+        return socket != null && socket.isBound() && !socket.isClosed() && socket.isConnected()
+                && !socket.isInputShutdown() && !socket.isOutputShutdown();
+    }
+
+    public void sendCommand(Protocol.Command command, final byte[]... args) {
+        try {
+            outputStream.write(args.length + 1);
+            outputStream.write(1);
+            outputStream.write(command.ordinal());
+            for (final byte[] arg : args) {
+                outputStream.write(arg.length);
+                outputStream.write(arg);
+            }
+            outputStream.flush();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void close() {
+        if (isConnected()) {
+            try {
+                outputStream.flush();
+                socket.close();
+            } catch(IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+
+    public String getBulkReply() {
+        final byte[] result;
+        try {
+            result = inputStream.readNBytes(2);
+            if (null != result) {
+                return new String(result, Protocol.KEYCAFE_CHARSET);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

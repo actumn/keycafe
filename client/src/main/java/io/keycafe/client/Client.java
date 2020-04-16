@@ -1,33 +1,58 @@
 package io.keycafe.client;
 
-import io.keycafe.client.entry.Entry;
+import io.keycafe.client.network.Connection;
+import io.keycafe.common.Protocol;
 
-public class Client {
+import java.io.IOException;
+
+import static io.keycafe.common.Protocol.KEYCAFE_CHARSET;
+
+public class Client extends Connection implements Commands {
     public Client () {
-
+        super();
     }
 
-    public void connect() {
-
+    public Client (final String host) {
+        super(host);
     }
 
+    public Client (final String host, final int port) {
+        super(host, port);
+    }
+
+    @Override
     public void get(String key) {
-
+        try {
+            this.sendCommand(Protocol.Command.GET, key.getBytes(KEYCAFE_CHARSET));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void set(String key, Object value) {
-
+    @Override
+    public void set(String key, String value) {
+        try {
+            this.sendCommand(Protocol.Command.SET, key.getBytes(KEYCAFE_CHARSET), value.getBytes(KEYCAFE_CHARSET));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void update(String key, Object value) {
-
+    @Override
+    public void update(String key, String value) {
+        try {
+            this.sendCommand(Protocol.Command.UPDATE, key.getBytes(KEYCAFE_CHARSET), value.getBytes(KEYCAFE_CHARSET));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
+    @Override
     public void delete(String key) {
-
-    }
-
-    private void sendMessage(Entry entry) {
-
+        try {
+            this.sendCommand(Protocol.Command.DELETE, key.getBytes(KEYCAFE_CHARSET));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
