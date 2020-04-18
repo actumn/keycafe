@@ -4,7 +4,7 @@ import io.keycafe.client.Keycafe;
 
 public class Console {
     public static void main(String[] args) {
-        Keycafe keycafe = new Keycafe();
+        Keycafe keycafe = new Keycafe("localhost", 9814);
         keycafe.connect();
         System.out.println(keycafe.get("example_key"));
         keycafe.disconnect();
