@@ -1,34 +1,32 @@
 package io.keycafe.server;
 
 import io.keycafe.common.Protocol;
-import io.keycafe.server.network.CommandMessage;
-import io.keycafe.server.network.ReplyMessage;
-import io.keycafe.server.network.command.CommandDispatcher;
+import io.keycafe.server.network.command.CommandHandler;
+import io.keycafe.server.network.command.DeleteCommand;
+import io.keycafe.server.network.command.GetCommand;
+import io.keycafe.server.network.command.SetCommand;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelPipeline;
+
+import java.util.HashMap;
 
 public class ServerChannelHandler extends ChannelInboundHandlerAdapter {
-    private final CommandDispatcher commandDispatcher;
-
     public ServerChannelHandler() {
         super();
-
-        commandDispatcher = new CommandDispatcher();
     }
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        CommandMessage command = (CommandMessage) msg;
-        byte[][] argv = command.getArgv();
-
-        System.out.println(command.getArgc());
-        System.out.println(argv[0][0]);
-        for (int i = 1; i < command.getArgc(); i++)
-            System.out.println(new String(argv[i], Protocol.KEYCAFE_CHARSET));
-
-
-        ReplyMessage reply = commandDispatcher.dispatch(command);
-        ctx.writeAndFlush(reply);
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+        super.channelActive(ctx);
+        final ChannelPipeline pipeline = ctx.pipeline();
+        pipeline.addLast(new CommandHandler(new HashMap<>() {
+            {
+                put(Protocol.Command.GET, new GetCommand());
+                put(Protocol.Command.SET, new SetCommand());
+                put(Protocol.Command.DELETE, new DeleteCommand());
+            }
+        }));
     }
 
 

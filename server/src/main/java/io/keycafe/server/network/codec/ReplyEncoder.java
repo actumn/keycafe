@@ -8,6 +8,6 @@ import io.netty.handler.codec.MessageToByteEncoder;
 public class ReplyEncoder extends MessageToByteEncoder<ReplyMessage> {
     @Override
     protected void encode(ChannelHandlerContext ctx, ReplyMessage msg, ByteBuf out) throws Exception {
-        out.writeBytes("ok".getBytes());
+        out.writeBytes(msg.message().getBytes());
     }
 }

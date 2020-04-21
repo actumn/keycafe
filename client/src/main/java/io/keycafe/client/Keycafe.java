@@ -28,12 +28,6 @@ public class Keycafe implements KeycafeCommands {
     }
 
     @Override
-    public String update(String key, String value) {
-        client.update(key, value);
-        return client.getBulkReply();
-    }
-
-    @Override
     public String delete(String key) {
         client.delete(key);
         return client.getBulkReply();

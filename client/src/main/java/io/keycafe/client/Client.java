@@ -39,15 +39,6 @@ public class Client extends Connection implements Commands {
     }
 
     @Override
-    public void update(String key, String value) {
-        try {
-            this.sendCommand(Protocol.Command.UPDATE, key.getBytes(KEYCAFE_CHARSET), value.getBytes(KEYCAFE_CHARSET));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     public void delete(String key) {
         try {
             this.sendCommand(Protocol.Command.DELETE, key.getBytes(KEYCAFE_CHARSET));

@@ -1,8 +1,6 @@
 package io.keycafe.server.network;
 
 public class CommandMessage {
-
-
     private final int argc;
     private final byte[][] argv;
 

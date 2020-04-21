@@ -5,7 +5,5 @@ public interface Commands {
 
     void set(String key, String value);
 
-    void update(String key, String value);
-
     void delete(String key);
 }

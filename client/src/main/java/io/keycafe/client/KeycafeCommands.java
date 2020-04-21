@@ -5,7 +5,5 @@ public interface KeycafeCommands {
 
     String set(String key, String value);
 
-    String update(String key, String value);
-
     String delete(String key);
 }

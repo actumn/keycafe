@@ -13,18 +13,13 @@ public class ByteToCommandDecoder extends MessageToMessageDecoder<ByteBuf> {
         byte argc = msg.readByte();
         byte[][] argv = new byte[argc][];
 
-        byte commandLen = msg.readByte();
-        byte[] arg0 = new byte[commandLen];
-        msg.readBytes(arg0, 0, commandLen);
-        argv[0] = arg0;
-
-        for (int i = 0; i < argc - 1; i++) {
+        for (int i = 0; i < argc; i++) {
             byte argLen = msg.readByte();
 
             byte[] arg = new byte[argLen];
             msg.readBytes(arg, 0, argLen);
 
-            argv[i+1] = arg;
+            argv[i] = arg;
         }
 
         out.add(new CommandMessage(argc, argv));

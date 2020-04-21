@@ -20,9 +20,6 @@ public class ConnectionTest {
         connection.sendCommand(Protocol.Command.SET, "aaa".getBytes(KEYCAFE_CHARSET), "111".getBytes(KEYCAFE_CHARSET));
         System.out.println(connection.getBulkReply());
 
-        connection.sendCommand(Protocol.Command.UPDATE, "aaa".getBytes(KEYCAFE_CHARSET), "111".getBytes(KEYCAFE_CHARSET));
-        System.out.println(connection.getBulkReply());
-
         connection.sendCommand(Protocol.Command.DELETE, "aaa".getBytes(KEYCAFE_CHARSET));
         System.out.println(connection.getBulkReply());
 
