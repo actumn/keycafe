@@ -83,12 +83,10 @@ public class Connection implements Closeable {
 
 
     public String getBulkReply() {
-        final byte[] result;
         try {
-            result = inputStream.readNBytes(2);
-            if (null != result) {
-                return new String(result, Protocol.KEYCAFE_CHARSET);
-            }
+            final byte[] result = new byte[2];
+            inputStream.read(result, 0 ,2);
+            return new String(result, Protocol.KEYCAFE_CHARSET);
         } catch (IOException e) {
             e.printStackTrace();
         }

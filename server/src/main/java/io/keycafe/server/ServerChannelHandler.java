@@ -1,10 +1,7 @@
 package io.keycafe.server;
 
 import io.keycafe.common.Protocol;
-import io.keycafe.server.network.command.CommandHandler;
-import io.keycafe.server.network.command.DeleteCommand;
-import io.keycafe.server.network.command.GetCommand;
-import io.keycafe.server.network.command.SetCommand;
+import io.keycafe.server.network.command.*;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelPipeline;
@@ -20,7 +17,7 @@ public class ServerChannelHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         final ChannelPipeline pipeline = ctx.pipeline();
-        pipeline.addLast(new CommandHandler(new HashMap<>() {
+        pipeline.addLast(new CommandHandler(new HashMap<Protocol.Command, CommandRunnable>() {
             {
                 put(Protocol.Command.GET, new GetCommand());
                 put(Protocol.Command.SET, new SetCommand());
