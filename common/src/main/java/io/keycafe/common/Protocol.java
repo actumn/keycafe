@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 
 public class Protocol {
     public static final int DEFAULT_PORT = 9814;
+    public static final int DEFAULT_CLUSTER_PORT = 19814;
     public static final String KEYCAFE_CHARSET = "UTF-8";
 
     public enum Command {

@@ -1,4 +1,4 @@
-package io.keycafe.server;
+package io.keycafe.server.services;
 
 import io.keycafe.common.Protocol;
 import io.keycafe.server.network.command.*;
@@ -8,8 +8,9 @@ import io.netty.channel.ChannelPipeline;
 
 import java.util.HashMap;
 
-public class ServerChannelHandler extends ChannelInboundHandlerAdapter {
-    public ServerChannelHandler() {
+public class BucketChannelHandler extends ChannelInboundHandlerAdapter {
+
+    public BucketChannelHandler() {
         super();
     }
 
@@ -36,5 +37,4 @@ public class ServerChannelHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         ctx.close();
     }
-
 }
