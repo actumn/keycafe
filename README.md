@@ -8,7 +8,10 @@
     Focusing on supporiting scalable, high-availability application.  
   </p>
 </div>
+
 ---
+## Introduction
+Keycafe is blah blah blah
 
 ## License
  - MIT
