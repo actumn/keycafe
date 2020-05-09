@@ -4,8 +4,13 @@
   <br/>
   <br/>
   <p>
-    The simple, distributed reliable, key-value store. <br/>
+    The simple, lightweight, distributed, reliable in-memory key-value store. <br/>
     Focusing on supporiting scalable, high-availability application.  
+  </p>
+  <p>
+    <a href="https://github.com/actumn/celery.node/blob/master/LICENSE">
+      <img src="https://img.shields.io/badge/license-MIT-blue.svg"/>
+    </a>
   </p>
 </div>
 
