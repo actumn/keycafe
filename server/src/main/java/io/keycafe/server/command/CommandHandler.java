@@ -1,4 +1,4 @@
-package io.keycafe.server.network.command;
+package io.keycafe.server.command;
 
 import io.keycafe.common.Protocol;
 import io.keycafe.server.network.CommandMessage;
@@ -24,8 +24,8 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
         byte[][] argv = msg.getArgv();
         Protocol.Command command = lookup(argv[0]);
 
-//        ReplyMessage reply = commandMap.get(command).run(msg.getArgc(), msg.getArgv());
-        ctx.writeAndFlush(ReplyMessage.OkMessage);
+        ReplyMessage reply = commandMap.get(command).run(msg.getArgc(), msg.getArgv());
+        ctx.writeAndFlush(reply);
 
 
         System.out.println("argc: " + msg.getArgc());

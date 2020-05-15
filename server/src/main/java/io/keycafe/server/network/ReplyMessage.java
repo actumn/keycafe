@@ -3,6 +3,7 @@ package io.keycafe.server.network;
 public class ReplyMessage {
     public static ReplyMessage OkMessage = new ReplyMessage("ok");
     public static ReplyMessage WrongArgcMessage = new ReplyMessage("wrong argc numbers");
+    public static ReplyMessage NoKeyFoundMessage = new ReplyMessage("no value found in this bucket");
 
     private final String message;
 
