@@ -1,0 +1,28 @@
+$light-gray: #ededed;
+$dark-gray: #d8d8d8;
+$btn-gray: #e6e6e6;
+$text-color: #8e8e8e;
+$title-color: #484848;
+$small-title-color: #1e1e1e;
+$news-line-color: #f0f0f0;
+
+@font-face { 
+  font-family: 'NanumSquareLight';
+  src: url('../../assets/fonts/NanumSquareLight.ttf') format('truetype');
+}
+
+a:visited {
+  text-decoration: none;
+
+}
+a:link{
+  text-decoration: none;
+}
+
+input[type=password] {
+  font-family: "AppleSDGothicNeo-Regular";
+  
+  &::placeholder {
+    font-family: "NanumSquare";
+  }
+}
