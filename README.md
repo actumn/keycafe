@@ -8,7 +8,7 @@
     Focusing on supporiting scalable, high-availability application.  
   </p>
   <p>
-    <a href="https://github.com/actumn/celery.node/blob/master/LICENSE">
+    <a href="https://github.com/actumn/keycafe/blob/master/LICENSE">
       <img src="https://img.shields.io/badge/license-MIT-blue.svg"/>
     </a>
   </p>
