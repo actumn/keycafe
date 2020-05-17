@@ -20,6 +20,13 @@ public class BucketService implements Service {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
+    private final int port;
+
+    public BucketService(int port) {
+        this.port = port;
+    }
+
+
     @Override
     public void run() throws Exception {
         final ServerBootstrap bootstrap = new ServerBootstrap()
@@ -37,7 +44,7 @@ public class BucketService implements Service {
                     }
                 });
 
-        ChannelFuture f = bootstrap.bind(new InetSocketAddress("localhost", Protocol.DEFAULT_PORT));
+        ChannelFuture f = bootstrap.bind(new InetSocketAddress("localhost", port));
         f.sync().channel().closeFuture().sync();
     }
 

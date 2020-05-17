@@ -18,6 +18,12 @@ public class ClusterService implements Service {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
+    private final int port;
+
+    public ClusterService(int port) {
+        this.port = port;
+    }
+
     @Override
     public void run() throws Exception {
         final ServerBootstrap bootstrap = new ServerBootstrap()
@@ -29,15 +35,17 @@ public class ClusterService implements Service {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         final ChannelPipeline pipeline = ch.pipeline();
 
+                        pipeline.addLast(new ClusterChannelHandler());
                     }
                 });
 
-        ChannelFuture f = bootstrap.bind(new InetSocketAddress("localhost", Protocol.DEFAULT_CLUSTER_PORT));
+        ChannelFuture f = bootstrap.bind(new InetSocketAddress("localhost", port));
         f.sync().channel().closeFuture().sync();
     }
 
     @Override
     public void close() {
-
+        bossGroup.shutdownGracefully();
+        workerGroup.shutdownGracefully();
     }
 }
