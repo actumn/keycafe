@@ -17,4 +17,6 @@ include 'server'
 include 'client'
 include 'examples:auth-server'
 include 'examples:console-client'
+include 'examples:auth-server'
+findProject(':examples:auth-server')?.name = 'auth-server'
 

@@ -1,19 +1,40 @@
-/* eslint-disable react/button-has-type */
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent } from 'react';
+import { RouteComponentProps } from 'react-router';
+import { inject, observer } from 'mobx-react';
+import { STORES } from '../../constants';
+import AuthStore from '../../stores/auth/AuthStore';
 
 import './index.scss';
 
-function SignIn() {
-  const [, setEmail] = useState('');
-  const [, setPassword] = useState('');
+interface InjectedProps {
+  [STORES.AUTH_STORE]: AuthStore;
+}
+
+function SignIn(props:InjectedProps & RouteComponentProps) {
+
+  const { authStore, history } = props;
+
+  const handleLogin = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    try {
+      await authStore.login();
+      history.push('/profile');
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  };
+
+  
 
   const changeEmail = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    // authStore.setEmail(e.target.value);
+    authStore.setEmail(e.target.value);
+    console.log(e.target.value);
   };
   const changePassword = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    // authStore.setPassword(e.target.value);
+    authStore.setPassword(e.target.value);
+    console.log(e.target.value);
   };
 
   return (
@@ -37,7 +58,7 @@ function SignIn() {
           />
         </div>
         <div className="main-page-buttons">
-          <button className="btn btn-block btn-primary">
+          <button onClick={handleLogin} className="btn btn-block btn-primary">
             로그인
           </button>
         </div>
@@ -54,4 +75,4 @@ function SignIn() {
   );
 }
 
-export default SignIn;
+export default inject(STORES.AUTH_STORE)(observer(SignIn));

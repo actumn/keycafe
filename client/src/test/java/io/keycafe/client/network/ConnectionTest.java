@@ -1,12 +1,14 @@
 package io.keycafe.client.network;
 
+// import io.keycafe.common.Protocol;
+
 import io.keycafe.common.Protocol;
 import org.junit.Test;
 
 import java.io.IOException;
 
 import static io.keycafe.common.Protocol.KEYCAFE_CHARSET;
-import static org.junit.Assert.assertEquals;
+// import static org.junit.Assert.assertEquals;
 
 public class ConnectionTest {
     @Test

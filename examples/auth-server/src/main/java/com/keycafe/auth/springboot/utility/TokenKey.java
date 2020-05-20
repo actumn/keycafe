@@ -1,4 +1,4 @@
-package io.keycafe.example;
+package com.keycafe.auth.springboot.utility;
 
 import io.keycafe.client.util.MurmurHash;
 
