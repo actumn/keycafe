@@ -46,11 +46,11 @@ public class Server {
     public void run() throws Exception {
         logger.info("Server[{}] start running", myself.getNodeId());
 
-        coordination.run();
-        coordination.registerClusterNode(myself.getNodeId(), myself);
-
-        cluster.run();
-//        bucket.run();
+//        coordination.run();
+//        coordination.registerClusterNode(myself.getNodeId(), myself);
+//
+//        cluster.run();
+        bucket.run();
     }
 
     public void connect(ClusterNode clusterNode) {

@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-        final File configFile = Paths.get("config3.yaml").toFile();
+        final File configFile = Paths.get("config.yaml").toFile();
         Configuration config = mapper.readValue(configFile, Configuration.class);
 
         Server server = new Server(config);
