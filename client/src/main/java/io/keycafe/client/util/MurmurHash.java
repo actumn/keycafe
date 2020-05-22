@@ -24,6 +24,7 @@ import java.nio.ByteOrder;
 public class MurmurHash {
     /**
      * Hashes bytes in an array.
+     *
      * @param data The bytes to hash.
      * @param seed The seed for the hash.
      * @return The 32 bit hash of the bytes in question.
@@ -34,10 +35,11 @@ public class MurmurHash {
 
     /**
      * Hashes bytes in part of an array.
-     * @param data The data to hash.
+     *
+     * @param data   The data to hash.
      * @param offset Where to start munging.
      * @param length How many bytes to process.
-     * @param seed The seed to start with.
+     * @param seed   The seed to start with.
      * @return The 32-bit hash of the data in question.
      */
     public static int hash(byte[] data, int offset, int length, int seed) {
@@ -46,7 +48,8 @@ public class MurmurHash {
 
     /**
      * Hashes the bytes in a buffer from the current position to the limit.
-     * @param buf The bytes to hash.
+     *
+     * @param buf  The bytes to hash.
      * @param seed The seed for the hash.
      * @return The 32 bit murmur hash of the bytes in the buffer.
      */

@@ -31,6 +31,6 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
         System.out.println("argc: " + msg.getArgc());
         System.out.println("argv[0]: " + argv[0][0]);
         for (int i = 1; i < msg.getArgc(); i++)
-            System.out.println("argv["+i+"]: " + new String(argv[i], Protocol.KEYCAFE_CHARSET));
+            System.out.println("argv[" + i + "]: " + new String(argv[i], Protocol.KEYCAFE_CHARSET));
     }
 }

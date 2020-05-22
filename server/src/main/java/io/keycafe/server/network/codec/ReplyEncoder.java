@@ -8,10 +8,10 @@ import io.netty.handler.codec.MessageToByteEncoder;
 
 public class ReplyEncoder extends MessageToByteEncoder<ReplyMessage> {
 
-  @Override
-  protected void encode(ChannelHandlerContext ctx, ReplyMessage msg, ByteBuf out) throws Exception {
-    String message = msg.message();
-    out.writeByte(message.length());
-    out.writeBytes(message.getBytes(Protocol.KEYCAFE_CHARSET));
-  }
+    @Override
+    protected void encode(ChannelHandlerContext ctx, ReplyMessage msg, ByteBuf out) throws Exception {
+        String message = msg.message();
+        out.writeByte(message.length());
+        out.writeBytes(message.getBytes(Protocol.KEYCAFE_CHARSET));
+    }
 }

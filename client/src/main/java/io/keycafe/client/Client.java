@@ -8,15 +8,15 @@ import java.io.IOException;
 import static io.keycafe.common.Protocol.KEYCAFE_CHARSET;
 
 public class Client extends Connection implements Commands {
-    public Client () {
+    public Client() {
         super();
     }
 
-    public Client (final String host) {
+    public Client(final String host) {
         super(host);
     }
 
-    public Client (final String host, final int port) {
+    public Client(final String host, final int port) {
         super(host, port);
     }
 
