@@ -1,8 +1,8 @@
 package io.keycafe.server.services;
 
-import io.keycafe.common.Protocol;
 import io.keycafe.server.network.codec.ByteToCommandDecoder;
 import io.keycafe.server.network.codec.ReplyEncoder;
+import io.keycafe.server.slot.LocalSlot;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -15,17 +15,19 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.ConcurrentHashMap;
 
-public class BucketService implements Service {
+public class SlotService implements Service {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private final int port;
+    private LocalSlot lslot;
 
-    public BucketService(int port) {
+    public SlotService(int port, LocalSlot lslot) {
         this.port = port;
+        this.lslot = lslot;
     }
-
 
     @Override
     public void run() throws Exception {
@@ -40,7 +42,7 @@ public class BucketService implements Service {
 
                         pipeline.addLast(new ByteToCommandDecoder());
                         pipeline.addLast(new ReplyEncoder());
-                        pipeline.addLast(new BucketChannelHandler());
+                        pipeline.addLast(new SlotChannelHandler(lslot));
                     }
                 });
 
