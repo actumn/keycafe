@@ -10,6 +10,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class Connection implements Closeable {
+
     private final String host;
     private final int port;
 
@@ -75,7 +76,7 @@ public class Connection implements Closeable {
             try {
                 outputStream.flush();
                 socket.close();
-            } catch(IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }
@@ -84,8 +85,10 @@ public class Connection implements Closeable {
 
     public String getBulkReply() {
         try {
-            final byte[] result = new byte[2];
-            inputStream.read(result, 0 ,2);
+            final byte[] len = new byte[1];
+            inputStream.read(len);
+            final byte[] result = new byte[len[0]];
+            inputStream.read(result, 0, len[0]);
             return new String(result, Protocol.KEYCAFE_CHARSET);
         } catch (IOException e) {
             e.printStackTrace();
