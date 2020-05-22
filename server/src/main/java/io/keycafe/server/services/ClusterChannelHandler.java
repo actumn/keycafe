@@ -9,7 +9,7 @@ public class ClusterChannelHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        System.out.println("오예 connection Bus - " + ctx.channel().localAddress());
+        System.out.println("connection Bus - " + ctx.channel().localAddress());
         final ChannelPipeline pipeline = ctx.pipeline();
     }
 

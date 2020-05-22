@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class GetCommand implements CommandRunnable {
 
-    Map<String, String> map;
+    private Map<String, String> map;
 
     public GetCommand(Map<String, String> map) {
         this.map = map;

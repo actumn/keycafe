@@ -5,24 +5,29 @@ import io.keycafe.server.cluster.ClusterLink;
 import io.keycafe.server.cluster.ClusterNode;
 import io.keycafe.server.config.Configuration;
 import io.keycafe.server.services.*;
+import io.keycafe.server.slot.LocalSlot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Server {
     public static final int NODE_NAMELEN = 40;
+    public static final int EXPIRE_MS = 3600000;
     private static final Logger logger = LogManager.getLogger(Server.class);
 
-    private final BucketService bucket;
-    private final ClusterService cluster;
+    private final SlotService slot;
+    private ClusterService cluster;
     private ClusterChannelHandler clusterChannelHandler;
-    private final CoordinationService coordination;
+    private CoordinationService coordination;
     private CoordinationServiceHandler coordinationServiceHandler;
 
     private final Configuration config;
     private final ClusterNode myself;
     private final ClusterConnector connector;
+
+    private final LocalSlot lslot = new LocalSlot(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
 
     public Server(Configuration config) {
         this.config = config;
@@ -36,9 +41,9 @@ public class Server {
                 config.getClusterPort());
 
 
-        this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
-        this.cluster = new ClusterService(config.getClusterPort());
-        this.bucket = new BucketService(config.getServicePort());
+//        this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
+//        this.cluster = new ClusterService(config.getClusterPort());
+        this.slot = new SlotService(config.getServicePort(), lslot);
 
         this.connector = new ClusterConnector();
     }
@@ -48,9 +53,9 @@ public class Server {
 
 //        coordination.run();
 //        coordination.registerClusterNode(myself.getNodeId(), myself);
-//
+
 //        cluster.run();
-        bucket.run();
+        slot.run();
     }
 
     public void connect(ClusterNode clusterNode) {
@@ -65,6 +70,12 @@ public class Server {
     }
 
     public void cron() {
-
+        Long now = System.currentTimeMillis();
+        for (Map.Entry<String, Long> stringLongEntry : lslot.expireStore.entrySet()) {
+            // Remove key if 1h passes
+            if (now - stringLongEntry.getValue() > EXPIRE_MS) {
+                lslot.expireStore.remove(stringLongEntry.getKey());
+            }
+        }
     }
 }

@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class DeleteCommand implements CommandRunnable {
 
-    Map<String, String> map;
+    private Map<String, String> map;
 
     public DeleteCommand(Map<String, String> map) {
         this.map = map;

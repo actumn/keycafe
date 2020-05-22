@@ -3,15 +3,17 @@ package io.keycafe.server.command;
 import io.keycafe.common.Protocol;
 import io.keycafe.server.network.ReplyMessage;
 
+import java.util.Date;
 import java.util.Map;
-
 
 public class SetCommand implements CommandRunnable {
 
-    Map<String, String> map;
+    private Map<String, String> kvMap;
+    private Map<String, Long> tMap;
 
-    public SetCommand(Map<String, String> map) {
-        this.map = map;
+    public SetCommand(Map<String, String> kvMap, Map<String, Long> tMap) {
+        this.kvMap = kvMap;
+        this.tMap = tMap;
     }
 
     @Override
@@ -20,8 +22,10 @@ public class SetCommand implements CommandRunnable {
             return ReplyMessage.WrongArgcMessage;
         }
 
-        String val = map.put(new String(argv[1], Protocol.KEYCAFE_CHARSET),
-                new String(argv[2], Protocol.KEYCAFE_CHARSET));
+        String k = new String(argv[1], Protocol.KEYCAFE_CHARSET);
+        String v = new String(argv[2], Protocol.KEYCAFE_CHARSET);
+        String val = kvMap.put(k, v);
+        tMap.put(k, System.currentTimeMillis());
 
         if (val != null) {
             return new ReplyMessage(val);
