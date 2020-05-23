@@ -1,8 +1,8 @@
 package io.keycafe.server;
 
 import io.keycafe.server.cluster.ClusterConnector;
-import io.keycafe.server.cluster.ClusterLink;
 import io.keycafe.server.cluster.ClusterNode;
+import io.keycafe.server.cluster.ClusterState;
 import io.keycafe.server.config.Configuration;
 import io.keycafe.server.services.*;
 import io.keycafe.server.slot.LocalSlot;
@@ -11,27 +11,27 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Server {
+    public static final int CLUSTER_SLOTS = 16384;
     public static final int NODE_NAMELEN = 40;
     public static final int EXPIRE_MS = 3600000;
     private static final Logger logger = LogManager.getLogger(Server.class);
 
     private final SlotService slot;
-    private ClusterService cluster;
-    private ClusterChannelHandler clusterChannelHandler;
-    private CoordinationService coordination;
-    private CoordinationServiceHandler coordinationServiceHandler;
+    private final ClusterService cluster;
+    private final CoordinationService coordination;
 
-    private final Configuration config;
+    private final ClusterState clusterState;
     private final ClusterNode myself;
     private final ClusterConnector connector;
 
-    private final LocalSlot lslot = new LocalSlot(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
+    private final LocalSlot lslot;
+
 
     public Server(Configuration config) {
-        this.config = config;
-
 //        final InetAddress inetAddress = SystemInfo.defaultNonLoopbackIpV4Address();
 //        final String ipAddressOrHostname = inetAddress != null ? inetAddress.getHostAddress() : "localhost";
 
@@ -39,37 +39,46 @@ public class Server {
                 Utils.getRandomHex(NODE_NAMELEN),
                 "localhost",
                 config.getClusterPort());
-
-
-//        this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
-//        this.cluster = new ClusterService(config.getClusterPort());
-        this.slot = new SlotService(config.getServicePort(), lslot);
-
+        this.clusterState = new ClusterState(this.myself);
+        this.lslot = new LocalSlot(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
         this.connector = new ClusterConnector();
+
+
+        this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
+        this.cluster = new ClusterService(config.getClusterPort());
+        this.slot = new SlotService(config.getServicePort(), lslot);
     }
 
     public void run() throws Exception {
         logger.info("Server[{}] start running", myself.getNodeId());
 
-//        coordination.run();
-//        coordination.registerClusterNode(myself.getNodeId(), myself);
+        Executors.newSingleThreadScheduledExecutor()
+                .scheduleAtFixedRate(this::cron, 100, 100, TimeUnit.MILLISECONDS);
 
-//        cluster.run();
-        slot.run();
+        coordination.run();
+        coordination.registerClusterNode(myself.getNodeId(), myself);
+
+        cluster.run();
+
+//        slot.run();
     }
 
     public void connect(ClusterNode clusterNode) {
         if (clusterNode.getNodeId().equals(myself.getNodeId()))
             return;
 
-        logger.info(clusterNode.getNodeId());
-        logger.info(clusterNode.getHostAddress());
-        logger.info(clusterNode.getPort());
-
-        ClusterLink link = connector.connect(clusterNode.getHostAddress(), clusterNode.getPort());
+        clusterNode.link(connector.connect(clusterNode.getHostAddress(), clusterNode.getPort()));
+        clusterState.putNode(clusterNode.getNodeId(), clusterNode);
     }
 
     public void cron() {
+        logger.info("cron start");
+//        expireCron();
+        clusterCron();
+        logger.info("cron end");
+    }
+
+    private void expireCron() {
         Long now = System.currentTimeMillis();
         for (Map.Entry<String, Long> stringLongEntry : lslot.expireStore.entrySet()) {
             // Remove key if 1h passes
@@ -77,5 +86,9 @@ public class Server {
                 lslot.expireStore.remove(stringLongEntry.getKey());
             }
         }
+    }
+
+    private void clusterCron() {
+
     }
 }
