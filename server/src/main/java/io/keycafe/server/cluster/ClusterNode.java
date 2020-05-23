@@ -9,7 +9,7 @@ public class ClusterNode {
     private final String hostAddress;
     private final int port;
     private ClusterLink link;
-    private byte[] myslots = new byte[Server.CLUSTER_SLOTS / 8];
+    private final byte[] myslots = new byte[Server.CLUSTER_SLOTS / 8];
 
     public ClusterNode(String nodeId, String hostAddress, int port) {
         this.nodeId = nodeId;

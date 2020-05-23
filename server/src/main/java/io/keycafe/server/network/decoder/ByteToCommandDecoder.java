@@ -1,6 +1,6 @@
-package io.keycafe.server.network.codec;
+package io.keycafe.server.network.decoder;
 
-import io.keycafe.server.network.CommandMessage;
+import io.keycafe.server.command.CommandMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;

@@ -1,6 +1,7 @@
 package io.keycafe.server.services;
 
-import io.keycafe.common.Protocol;
+import io.keycafe.server.network.decoder.ByteToClusterMsgDecoder;
+import io.keycafe.server.network.encoder.ClusterMsgEncoder;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -35,6 +36,8 @@ public class ClusterService implements Service {
                     protected void initChannel(SocketChannel ch) throws Exception {
                         final ChannelPipeline pipeline = ch.pipeline();
 
+                        pipeline.addLast(new ClusterMsgEncoder());
+                        pipeline.addLast(new ByteToClusterMsgDecoder());
                         pipeline.addLast(new ClusterChannelHandler());
                     }
                 });

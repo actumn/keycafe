@@ -1,4 +1,4 @@
-package io.keycafe.server.config;
+package io.keycafe.server;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

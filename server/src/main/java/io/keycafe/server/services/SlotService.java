@@ -1,7 +1,7 @@
 package io.keycafe.server.services;
 
-import io.keycafe.server.network.codec.ByteToCommandDecoder;
-import io.keycafe.server.network.codec.ReplyEncoder;
+import io.keycafe.server.network.decoder.ByteToCommandDecoder;
+import io.keycafe.server.network.encoder.ReplyEncoder;
 import io.keycafe.server.slot.LocalSlot;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -15,14 +15,13 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class SlotService implements Service {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
     private final int port;
-    private LocalSlot lslot;
+    private final LocalSlot lslot;
 
     public SlotService(int port, LocalSlot lslot) {
         this.port = port;

@@ -1,15 +1,15 @@
-package io.keycafe.server.command;
+package io.keycafe.server.command.handler;
 
 import io.keycafe.common.Protocol;
-import io.keycafe.server.network.ReplyMessage;
+import io.keycafe.server.command.ReplyMessage;
 
 import java.util.Map;
 
-public class DeleteCommand implements CommandRunnable {
+public class GetCommand implements CommandRunnable {
 
     private Map<String, String> map;
 
-    public DeleteCommand(Map<String, String> map) {
+    public GetCommand(Map<String, String> map) {
         this.map = map;
     }
 
@@ -19,13 +19,12 @@ public class DeleteCommand implements CommandRunnable {
             return ReplyMessage.WrongArgcMessage;
         }
 
-        String val = map.remove(new String(argv[1], Protocol.KEYCAFE_CHARSET));
-
+        String val = map.get(new String(argv[1], Protocol.KEYCAFE_CHARSET));
         if (val != null) {
             return new ReplyMessage(val);
         } else {
-            return ReplyMessage.OkMessage;
+            return ReplyMessage.NoKeyFoundMessage;
         }
-//        throw new RuntimeException("Not implemented here");
+//      throw new RuntimeException("Not implemented yet.");
     }
 }

@@ -1,4 +1,4 @@
-package io.keycafe.server.network;
+package io.keycafe.server.command;
 
 public class ReplyMessage {
     public static ReplyMessage OkMessage = new ReplyMessage("ok");

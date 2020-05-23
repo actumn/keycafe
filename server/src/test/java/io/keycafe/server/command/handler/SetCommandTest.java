@@ -1,13 +1,13 @@
-package io.keycafe.server.command;
+package io.keycafe.server.command.handler;
 
 import static org.junit.Assert.assertEquals;
 
 import io.keycafe.common.Protocol.Command;
-import io.keycafe.server.network.ReplyMessage;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import io.keycafe.server.command.ReplyMessage;
 import org.junit.Test;
 
 public class SetCommandTest {

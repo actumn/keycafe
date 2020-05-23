@@ -1,9 +1,8 @@
-package io.keycafe.server.command;
+package io.keycafe.server.command.handler;
 
 import io.keycafe.common.Protocol;
-import io.keycafe.server.network.ReplyMessage;
+import io.keycafe.server.command.ReplyMessage;
 
-import java.util.Date;
 import java.util.Map;
 
 public class SetCommand implements CommandRunnable {

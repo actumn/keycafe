@@ -1,7 +1,7 @@
-package io.keycafe.server.network.codec;
+package io.keycafe.server.network.encoder;
 
 import io.keycafe.common.Protocol;
-import io.keycafe.server.network.ReplyMessage;
+import io.keycafe.server.command.ReplyMessage;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;

@@ -3,7 +3,6 @@ package io.keycafe.server;
 import io.keycafe.server.cluster.ClusterConnector;
 import io.keycafe.server.cluster.ClusterNode;
 import io.keycafe.server.cluster.ClusterState;
-import io.keycafe.server.config.Configuration;
 import io.keycafe.server.services.*;
 import io.keycafe.server.slot.LocalSlot;
 import org.apache.logging.log4j.LogManager;
@@ -68,6 +67,7 @@ public class Server {
             return;
 
         clusterNode.link(connector.connect(clusterNode.getHostAddress(), clusterNode.getPort()));
+        // TODO:: cluster ping
         clusterState.putNode(clusterNode.getNodeId(), clusterNode);
     }
 
@@ -80,10 +80,10 @@ public class Server {
 
     private void expireCron() {
         Long now = System.currentTimeMillis();
-        for (Map.Entry<String, Long> stringLongEntry : lslot.expireStore.entrySet()) {
+        for (Map.Entry<String, Long> stringLongEntry : lslot.expire.entrySet()) {
             // Remove key if 1h passes
             if (now - stringLongEntry.getValue() > EXPIRE_MS) {
-                lslot.expireStore.remove(stringLongEntry.getKey());
+                lslot.expire.remove(stringLongEntry.getKey());
             }
         }
     }

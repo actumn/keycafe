@@ -1,5 +1,6 @@
-package io.keycafe.server.cluster;
+package io.keycafe.server.cluster.handler;
 
+import io.keycafe.server.cluster.ClusterMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
