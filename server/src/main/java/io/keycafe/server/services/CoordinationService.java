@@ -2,6 +2,7 @@ package io.keycafe.server.services;
 
 import com.google.gson.Gson;
 import io.keycafe.server.cluster.ClusterNode;
+import io.keycafe.server.cluster.ClusterNodeConfig;
 import kr.ac.konkuk.ccslab.cm.event.CMUserEvent;
 import kr.ac.konkuk.ccslab.cm.info.CMInfo;
 import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
@@ -29,7 +30,7 @@ public class CoordinationService implements Service {
         CMUserEvent userEvent = new CMUserEvent();
         userEvent.setStringID("register-node");
         userEvent.setEventField(CMInfo.CM_STR, "node-id", nodeId);
-        userEvent.setEventField(CMInfo.CM_STR, "node-config", new Gson().toJson(clusterNode));
+        userEvent.setEventField(CMInfo.CM_STR, "node-config", new Gson().toJson(clusterNode.config()));
 
         clientStub.send(userEvent, "SERVER");
     }

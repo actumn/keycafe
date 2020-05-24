@@ -1,26 +1,29 @@
 package io.keycafe.server.cluster;
 
-import io.keycafe.server.Server;
-
 public class ClusterMessage {
-    private final byte[] signature = new byte[] {'K', 'C', 'm', 'b'};
-    private ClusterMessageType type;
-    private byte[] myslots = new byte[Server.CLUSTER_SLOTS / 8];
-    private String sender;
+    private final ClusterMessageType type;
+    private final byte[] myslots;
+    private final String sender;
 
-    public ClusterMessage() {
-
+    public ClusterMessage(ClusterMessageType type, byte[] slots, String sender) {
+        this.type = type;
+        this.myslots = slots;
+        this.sender = sender;
     }
 
-    public byte[] encode() {
-        return null;
+    public ClusterMessageType getType() {
+        return type;
     }
 
-    public static ClusterMessage decode(byte[] bytes) {
-        return null;
+    public byte[] getMyslots() {
+        return myslots;
+    }
+
+    public String getSender() {
+        return sender;
     }
 
     public enum ClusterMessageType {
-        PING, PONG
+        PING, PONG, UPDATE_CONFIG
     }
 }

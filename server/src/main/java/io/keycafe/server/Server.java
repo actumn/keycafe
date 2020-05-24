@@ -1,6 +1,6 @@
 package io.keycafe.server;
 
-import io.keycafe.server.cluster.ClusterConnector;
+import io.keycafe.server.cluster.ClusterLink;
 import io.keycafe.server.cluster.ClusterNode;
 import io.keycafe.server.cluster.ClusterState;
 import io.keycafe.server.services.*;
@@ -25,7 +25,6 @@ public class Server {
 
     private final ClusterState clusterState;
     private final ClusterNode myself;
-    private final ClusterConnector connector;
 
     private final LocalSlot lslot;
 
@@ -40,7 +39,6 @@ public class Server {
                 config.getClusterPort());
         this.clusterState = new ClusterState(this.myself);
         this.lslot = new LocalSlot(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
-        this.connector = new ClusterConnector();
 
 
         this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
@@ -52,7 +50,7 @@ public class Server {
         logger.info("Server[{}] start running", myself.getNodeId());
 
         Executors.newSingleThreadScheduledExecutor()
-                .scheduleAtFixedRate(this::cron, 100, 100, TimeUnit.MILLISECONDS);
+                .scheduleAtFixedRate(this::cron, 1, 1, TimeUnit.SECONDS);
 
         coordination.run();
         coordination.registerClusterNode(myself.getNodeId(), myself);
@@ -66,8 +64,11 @@ public class Server {
         if (clusterNode.getNodeId().equals(myself.getNodeId()))
             return;
 
-        clusterNode.link(connector.connect(clusterNode.getHostAddress(), clusterNode.getPort()));
-        // TODO:: cluster ping
+        ClusterLink link = new ClusterLink(clusterNode);
+        link.connect(clusterNode.getHostAddress(), clusterNode.getPort());
+        link.sendPing();
+        logger.info("sendPing ends");
+        clusterNode.link(link);
         clusterState.putNode(clusterNode.getNodeId(), clusterNode);
     }
 
@@ -75,7 +76,7 @@ public class Server {
         logger.info("cron start");
 //        expireCron();
         clusterCron();
-        logger.info("cron end");
+//        logger.info("cron end");
     }
 
     private void expireCron() {
@@ -89,6 +90,10 @@ public class Server {
     }
 
     private void clusterCron() {
-
+        for (Map.Entry<String, ClusterNode> nodeEntry : clusterState.getNodeMap().entrySet()) {
+            ClusterNode node = nodeEntry.getValue();
+            if (node == myself) continue;
+            nodeEntry.getValue().getLink().sendPing();
+        }
     }
 }

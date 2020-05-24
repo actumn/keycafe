@@ -17,4 +17,8 @@ public class ClusterState {
     public void putNode(String nodeId, ClusterNode node) {
         nodeMap.put(nodeId, node);
     }
+
+    public Map<String, ClusterNode> getNodeMap() {
+        return nodeMap;
+    }
 }
