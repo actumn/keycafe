@@ -10,7 +10,8 @@ public class ClusterMsgEncoder extends MessageToByteEncoder<ClusterMessage> {
     protected void encode(ChannelHandlerContext ctx, ClusterMessage msg, ByteBuf out) throws Exception {
         out.writeBytes("KCmb".getBytes()); // signature
         out.writeByte(msg.getType().ordinal());
-//        out.writeBytes(msg.getMyslots());     // TODO:: handling frame when exced 1024 bytes
+        out.writeBytes(msg.getMyslots());
         out.writeBytes(msg.getSender().getBytes());
+        out.writeByte('\n');
     }
 }

@@ -33,6 +33,7 @@ public class ClusterLink {
                         final ChannelPipeline pipeline = ch.pipeline();
 
                         pipeline.addLast(new ClusterMsgEncoder());
+                        pipeline.addLast(new DelimiterBasedFrameDecoder(4096, Delimiters.lineDelimiter()));
                         pipeline.addLast(new ByteToClusterMsgDecoder());
                         pipeline.addLast(new ClusterChannelHandler());
                     }

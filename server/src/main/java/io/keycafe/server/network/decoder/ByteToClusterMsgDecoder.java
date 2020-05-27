@@ -19,7 +19,7 @@ public class ByteToClusterMsgDecoder extends MessageToMessageDecoder<ByteBuf> {
 
         byte type = msg.readByte();
         byte[] slots = new byte[2048];
-//        msg.readBytes(slots);         // TODO:: handling frame when exced 1024 bytes
+        msg.readBytes(slots);
 
         byte[] sender = new byte[40];
         msg.readBytes(sender);
