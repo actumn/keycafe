@@ -23,9 +23,9 @@ public class SlotService implements Service {
     private final int port;
     private final LocalSlot lslot;
 
-    public SlotService(int port, LocalSlot lslot) {
-        this.port = port;
+    public SlotService(LocalSlot lslot, int port) {
         this.lslot = lslot;
+        this.port = port;
     }
 
     @Override

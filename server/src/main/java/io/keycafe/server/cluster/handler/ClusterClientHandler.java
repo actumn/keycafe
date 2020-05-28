@@ -1,12 +1,14 @@
-package io.keycafe.server.services;
+package io.keycafe.server.cluster.handler;
 
+import io.keycafe.server.services.ClusterChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelPipeline;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class ClusterChannelHandler extends ChannelInboundHandlerAdapter {
-    private static final Logger logger = LogManager.getLogger(ClusterChannelHandler.class);
+public class ClusterClientHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger logger = LogManager.getLogger(ClusterClientHandler.class);
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {

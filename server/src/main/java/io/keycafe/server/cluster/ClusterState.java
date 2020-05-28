@@ -22,6 +22,10 @@ public class ClusterState {
         return nodeMap;
     }
 
+    public ClusterNode lookupNode(String nodeId) {
+        return nodeMap.get(nodeId);
+    }
+
     public void setSlot(ClusterNode node, int slot) {
         slots[slot] = node;
     }

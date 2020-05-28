@@ -1,6 +1,6 @@
 package io.keycafe.server.network.decoder;
 
-import io.keycafe.server.cluster.ClusterMessage;
+import io.keycafe.server.cluster.ClusterMsg;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
@@ -24,6 +24,6 @@ public class ByteToClusterMsgDecoder extends MessageToMessageDecoder<ByteBuf> {
         byte[] sender = new byte[40];
         msg.readBytes(sender);
 
-        out.add(new ClusterMessage(ClusterMessage.ClusterMessageType.values()[(int) type], slots, new String(sender)));
+        out.add(new ClusterMsg(ClusterMsg.ClusterMessageType.values()[(int) type], slots, new String(sender)));
     }
 }

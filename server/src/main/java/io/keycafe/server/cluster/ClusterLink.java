@@ -1,10 +1,10 @@
 package io.keycafe.server.cluster;
 
-import io.keycafe.server.cluster.handler.ClusterMessageHandler;
+import io.keycafe.server.cluster.handler.ClusterClientHandler;
 import io.keycafe.server.network.decoder.ByteToClusterMsgDecoder;
 import io.keycafe.server.network.encoder.ClusterMsgEncoder;
-import io.keycafe.server.services.ClusterChannelHandler;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
@@ -15,14 +15,9 @@ import io.netty.handler.codec.DelimiterBasedFrameDecoder;
 import io.netty.handler.codec.Delimiters;
 
 public class ClusterLink {
-    private final ClusterNode clusterNode;
     private SocketChannel channel;
 
-    public ClusterLink(ClusterNode clusterNode) {
-        this.clusterNode = clusterNode;
-    }
-
-    public void connect(String hostAddress, int port) {
+    public void connect(String hostAddress, int port, ChannelHandler messageHandler) {
         EventLoopGroup loopGroup = new NioEventLoopGroup();
         Bootstrap bootstrap = new Bootstrap()
                 .group(loopGroup)
@@ -35,16 +30,22 @@ public class ClusterLink {
                         pipeline.addLast(new ClusterMsgEncoder());
                         pipeline.addLast(new DelimiterBasedFrameDecoder(4096, Delimiters.lineDelimiter()));
                         pipeline.addLast(new ByteToClusterMsgDecoder());
-                        pipeline.addLast(new ClusterChannelHandler());
+                        pipeline.addLast(new ClusterClientHandler());
+                        pipeline.addLast(messageHandler);
                     }
                 });
 
-        channel = (SocketChannel) bootstrap.connect(hostAddress, port).channel();
+        try {
+            channel = (SocketChannel) bootstrap.connect(hostAddress, port).sync().channel();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
     }
 
     public void sendPing(ClusterNode myself) {
-        channel.writeAndFlush(new ClusterMessage(
-                ClusterMessage.ClusterMessageType.PING,
+        channel.writeAndFlush(new ClusterMsg(
+                ClusterMsg.ClusterMessageType.PING,
                 myself.getMyslots(),
                 myself.getNodeId()));
     }

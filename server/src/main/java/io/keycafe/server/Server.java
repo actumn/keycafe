@@ -1,10 +1,13 @@
 package io.keycafe.server;
 
 import io.keycafe.server.cluster.ClusterLink;
+import io.keycafe.server.cluster.ClusterMsg;
 import io.keycafe.server.cluster.ClusterNode;
 import io.keycafe.server.cluster.ClusterState;
+import io.keycafe.server.cluster.handler.ClusterMessageHandler;
 import io.keycafe.server.services.*;
 import io.keycafe.server.slot.LocalSlot;
+import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -43,8 +46,8 @@ public class Server implements Service {
 
 
         this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
-        this.cluster = new ClusterService(config.getClusterPort());
-        this.slot = new SlotService(config.getServicePort(), lslot);
+        this.cluster = new ClusterService(this, config.getClusterPort());
+        this.slot = new SlotService(lslot, config.getServicePort());
     }
 
     @Override
@@ -56,9 +59,7 @@ public class Server implements Service {
 
         coordination.run();
         coordination.registerClusterNode(myself.getNodeId(), myself);
-
         cluster.run();
-
 //        slot.run();
     }
 
@@ -69,12 +70,12 @@ public class Server implements Service {
         slot.close();
     }
 
-    public void connect(ClusterNode clusterNode) {
+    public void meet(ClusterNode clusterNode) {
         if (clusterNode.getNodeId().equals(myself.getNodeId()))
             return;
 
-        ClusterLink link = new ClusterLink(clusterNode);
-        link.connect(clusterNode.getHostAddress(), clusterNode.getPort());
+        ClusterLink link = new ClusterLink();
+        link.connect(clusterNode.getHostAddress(), clusterNode.getPort(), new ClusterMessageHandler(this));
         link.sendPing(myself);
         clusterNode.link(link);
         clusterState.putNode(clusterNode.getNodeId(), clusterNode);
@@ -96,7 +97,23 @@ public class Server implements Service {
                 clusterDelSlot(myself, i);
             }
         }
-        System.out.println(Arrays.toString(myself.getMyslots()));
+    }
+
+    public void clusterProcessPacket(ChannelHandlerContext ctx, ClusterMsg msg) {
+        logger.info("clusterProcessPacket - {}", msg.getType().toString());
+        ClusterNode sender = clusterState.lookupNode(msg.getSender());
+
+        if (msg.getType() == ClusterMsg.ClusterMessageType.PING) {
+            ctx.writeAndFlush(new ClusterMsg(ClusterMsg.ClusterMessageType.PONG,
+                    myself.getMyslots(),
+                    myself.getNodeId()));
+        }
+
+        if (msg.getType() == ClusterMsg.ClusterMessageType.PING || msg.getType() == ClusterMsg.ClusterMessageType.PONG) {
+            if (!Arrays.equals(msg.getMyslots(), sender.getMyslots())) {
+                // TODO :: synchronize here.
+            }
+        }
     }
 
     private void clusterAddSlot(ClusterNode node, int slot) {
@@ -127,12 +144,16 @@ public class Server implements Service {
         }
     }
 
+    private long iteration = 0;
     private void clusterCron() {
-        for (Map.Entry<String, ClusterNode> nodeEntry : clusterState.getNodeMap().entrySet()) {
-            ClusterNode node = nodeEntry.getValue();
-            if (node == myself) continue;
+        iteration += 1;
+        if (iteration % 10 == 0) {
+            for (Map.Entry<String, ClusterNode> nodeEntry : clusterState.getNodeMap().entrySet()) {
+                ClusterNode node = nodeEntry.getValue();
+                if (node == myself) continue;
 
-            node.getLink().sendPing(myself);
+                node.getLink().sendPing(myself);
+            }
         }
     }
 }

@@ -97,7 +97,7 @@ public class CoordinationServiceHandler implements CMAppEventHandler {
             String config = userEvent.getEventField(CMInfo.CM_STR, "node-config");
 
             final ClusterNodeConfig nodeConfig = new Gson().fromJson(config, ClusterNodeConfig.class);
-            server.connect(ClusterNode.fromConfig(nodeConfig));
+            server.meet(ClusterNode.fromConfig(nodeConfig));
             return;
         }
 

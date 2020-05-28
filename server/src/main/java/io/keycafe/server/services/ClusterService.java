@@ -1,12 +1,11 @@
 package io.keycafe.server.services;
 
+import io.keycafe.server.Server;
+import io.keycafe.server.cluster.handler.ClusterMessageHandler;
 import io.keycafe.server.network.decoder.ByteToClusterMsgDecoder;
 import io.keycafe.server.network.encoder.ClusterMsgEncoder;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -21,9 +20,11 @@ public class ClusterService implements Service {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
     private final EventLoopGroup workerGroup = new NioEventLoopGroup();
 
+    private final Server server;
     private final int port;
 
-    public ClusterService(int port) {
+    public ClusterService(Server server, int port) {
+        this.server = server;
         this.port = port;
     }
 
@@ -42,6 +43,7 @@ public class ClusterService implements Service {
                         pipeline.addLast(new DelimiterBasedFrameDecoder(4096, Delimiters.lineDelimiter()));
                         pipeline.addLast(new ByteToClusterMsgDecoder());
                         pipeline.addLast(new ClusterChannelHandler());
+                        pipeline.addLast(new ClusterMessageHandler(server));
                     }
                 });
 
