@@ -42,10 +42,10 @@ public class ClusterLink {
         channel = (SocketChannel) bootstrap.connect(hostAddress, port).channel();
     }
 
-    public void sendPing() {
+    public void sendPing(ClusterNode myself) {
         channel.writeAndFlush(new ClusterMessage(
                 ClusterMessage.ClusterMessageType.PING,
-                clusterNode.getMyslots(),
-                clusterNode.getNodeId()));
+                myself.getMyslots(),
+                myself.getNodeId()));
     }
 }

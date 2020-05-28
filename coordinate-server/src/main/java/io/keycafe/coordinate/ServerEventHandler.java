@@ -95,9 +95,28 @@ public class ServerEventHandler implements CMAppEventHandler {
             }
             discoveryMap.put(nodeId, config);
             serverStub.broadcast(userEvent);
+            rebalanceSlots();
             return;
         }
 
         logger.info("unhandled userEvent: " + userEvent.getStringID());
+    }
+
+    private static final int CLUSTER_SLOTS = 16384;
+    private void rebalanceSlots() {
+        logger.info("current server counts: {}", discoveryMap.size());
+        int[] splitSlots = Utils.splitNumber(CLUSTER_SLOTS, discoveryMap.size());
+        int index = 0;
+        for (String nodeId : discoveryMap.keySet()) {
+            logger.info("current server: {}, index {}", nodeId, index);
+
+            CMUserEvent sendEvent = new CMUserEvent();
+            sendEvent.setStringID("rebalance-slot");
+            sendEvent.setEventField(CMInfo.CM_INT, "low", String.valueOf(splitSlots[index]));
+            sendEvent.setEventField(CMInfo.CM_INT, "high", String.valueOf(splitSlots[index+1]));
+            serverStub.send(sendEvent, nodeId);
+
+            index++;
+        }
     }
 }

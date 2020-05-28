@@ -101,6 +101,14 @@ public class CoordinationServiceHandler implements CMAppEventHandler {
             return;
         }
 
+        if ("rebalance-slot".equals(userEvent.getStringID())) {
+            int low = Integer.parseInt(userEvent.getEventField(CMInfo.CM_INT, "low"));
+            int high = Integer.parseInt(userEvent.getEventField(CMInfo.CM_INT, "high"));
+
+            server.rebalanceSlots(low, high);
+            return;
+        }
+
         logger.info("unhandled userEvent: " + userEvent.getStringID());
     }
 }

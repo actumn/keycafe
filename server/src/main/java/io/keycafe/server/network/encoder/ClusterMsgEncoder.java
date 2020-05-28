@@ -12,6 +12,7 @@ public class ClusterMsgEncoder extends MessageToByteEncoder<ClusterMessage> {
         out.writeByte(msg.getType().ordinal());
         out.writeBytes(msg.getMyslots());
         out.writeBytes(msg.getSender().getBytes());
+        out.writeByte('\r');
         out.writeByte('\n');
     }
 }

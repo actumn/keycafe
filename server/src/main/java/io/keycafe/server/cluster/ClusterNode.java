@@ -50,11 +50,32 @@ public class ClusterNode {
         return myslots;
     }
 
+    public boolean bitmapTestBit(int slot) {
+        // slot 은 0 ~ 16383
+        // 8로 나누면 0 ~ 2047
+        int pos = slot / 8;
+        int bit = slot & 7;
+        return (myslots[pos] & (1 << bit)) != 0;
+    }
+
     public void bitmapSetBit(int slot) {
         // slot 은 0 ~ 16383
         // 8로 나누면 0 ~ 2047
-        byte pos = (byte) (slot / 8);
+        int pos = slot / 8;
         int bit = slot & 7;
-        this.myslots[pos] |= (1 << bit);
+        synchronized (myslots) {
+            myslots[pos] |= (1 << bit);
+        }
+    }
+
+    /* Clear the bit at position 'pos' in a bitmap. */
+    public void bitmapClearBit(int slot) {
+        // slot 은 0 ~ 16383
+        // 8로 나누면 0 ~ 2047
+        int pos = slot / 8;
+        int bit = slot & 7;
+        synchronized (myslots) {
+            myslots[pos] &= ~(1<<bit);
+        }
     }
 }

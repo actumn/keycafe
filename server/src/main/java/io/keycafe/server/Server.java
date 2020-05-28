@@ -8,12 +8,13 @@ import io.keycafe.server.slot.LocalSlot;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class Server {
+public class Server implements Service {
     public static final int CLUSTER_SLOTS = 16384;
     public static final int NODE_NAMELEN = 40;
     public static final int EXPIRE_MS = 3600000;
@@ -46,6 +47,7 @@ public class Server {
         this.slot = new SlotService(config.getServicePort(), lslot);
     }
 
+    @Override
     public void run() throws Exception {
         logger.info("Server[{}] start running", myself.getNodeId());
 
@@ -60,17 +62,53 @@ public class Server {
 //        slot.run();
     }
 
+    @Override
+    public void close() {
+        coordination.close();
+        cluster.close();
+        slot.close();
+    }
+
     public void connect(ClusterNode clusterNode) {
         if (clusterNode.getNodeId().equals(myself.getNodeId()))
             return;
 
         ClusterLink link = new ClusterLink(clusterNode);
         link.connect(clusterNode.getHostAddress(), clusterNode.getPort());
-        link.sendPing();
-        logger.info("sendPing ends");
+        link.sendPing(myself);
         clusterNode.link(link);
         clusterState.putNode(clusterNode.getNodeId(), clusterNode);
     }
+
+    public void rebalanceSlots(int low, int high) {
+        logger.info("clusterAddSlots slot: low {}, high {}", low, high);
+
+        for (int i = 0; i < CLUSTER_SLOTS; i++) {
+            if (low <= i && i < high) {
+                if (myself.bitmapTestBit(i)) continue;
+
+                clusterAddSlot(myself, i);
+            }
+
+            if (i < low || high <= i) {
+                if (!myself.bitmapTestBit(i)) continue;
+
+                clusterDelSlot(myself, i);
+            }
+        }
+        System.out.println(Arrays.toString(myself.getMyslots()));
+    }
+
+    private void clusterAddSlot(ClusterNode node, int slot) {
+        node.bitmapSetBit(slot);
+        clusterState.setSlot(node, slot);
+    }
+
+    private void clusterDelSlot(ClusterNode node, int slot) {
+        node.bitmapClearBit(slot);
+        clusterState.setSlot(null, slot);
+    }
+
 
     public void cron() {
         logger.info("cron start");
@@ -93,7 +131,8 @@ public class Server {
         for (Map.Entry<String, ClusterNode> nodeEntry : clusterState.getNodeMap().entrySet()) {
             ClusterNode node = nodeEntry.getValue();
             if (node == myself) continue;
-            nodeEntry.getValue().getLink().sendPing();
+
+            node.getLink().sendPing(myself);
         }
     }
 }
