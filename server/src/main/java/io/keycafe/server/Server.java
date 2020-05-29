@@ -38,7 +38,7 @@ public class Server implements Service {
 //        final String ipAddressOrHostname = inetAddress != null ? inetAddress.getHostAddress() : "localhost";
 
         this.myself = new ClusterNode(
-                Utils.getRandomHex(NODE_NAMELEN),
+                RandomUtils.getRandomHex(NODE_NAMELEN),
                 "localhost",
                 config.getClusterPort());
         this.clusterState = new ClusterState(this.myself);
@@ -110,9 +110,23 @@ public class Server implements Service {
         }
 
         if (msg.getType() == ClusterMsg.ClusterMessageType.PING || msg.getType() == ClusterMsg.ClusterMessageType.PONG) {
-            if (!Arrays.equals(msg.getMyslots(), sender.getMyslots())) {
-                // TODO :: synchronize here.
+            if (Arrays.equals(msg.getMyslots(), sender.getMyslots()))
+                return;
+
+            for (int i = 0; i < CLUSTER_SLOTS; i++) {
+                if (BitmapUtils.bitmapTestBit(msg.getMyslots(), i)) {
+                    if (clusterState.getSlots()[i] == sender)
+                        continue;
+
+                    if (clusterState.getSlots()[i] != null)
+                        clusterDelSlot(clusterState.getSlots()[i], i);
+
+                    clusterAddSlot(sender, i);
+                }
             }
+
+            logger.info("ping-pong result - myself: {}", Arrays.toString(myself.getMyslots()));
+            logger.info("ping-pong result - sender: {}", Arrays.toString(sender.getMyslots()));
         }
     }
 
