@@ -1,5 +1,7 @@
 package io.keycafe.client;
 
+import java.util.List;
+
 public class Keycafe implements KeycafeCommands {
     private final Client client;
 
@@ -24,13 +26,19 @@ public class Keycafe implements KeycafeCommands {
     @Override
     public String set(String key, String value) {
         client.set(key, value);
-        return client.getBulkReply();
+        return client.getSimpleString();
     }
 
     @Override
     public String delete(String key) {
         client.delete(key);
-        return client.getBulkReply();
+        return client.getSimpleString();
+    }
+
+    @Override
+    public List<Object> clusterSlots() {
+        client.clusterSlots();
+        return client.getArray();
     }
 
     public void connect() {

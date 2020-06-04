@@ -1,6 +1,8 @@
 package io.keycafe.client.network;
 
 import io.keycafe.client.exceptions.KeycafeConnectionException;
+import io.keycafe.client.exceptions.KeycafeExeception;
+import io.keycafe.client.exceptions.KeycafeServerException;
 import io.keycafe.client.stream.KeycafeInputStream;
 import io.keycafe.client.stream.KeycafeOutputStream;
 import io.keycafe.common.Protocol;
@@ -8,6 +10,7 @@ import io.keycafe.common.Protocol;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Connection implements Closeable {
@@ -83,6 +86,9 @@ public class Connection implements Closeable {
         }
     }
 
+    public String getSimpleString() {
+        return (String) readObject();
+    }
 
     public String getBulkReply() {
         final byte[] result = (byte[]) readObject();
@@ -95,6 +101,10 @@ public class Connection implements Closeable {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<Object> getArray() {
+        return (List<Object>) readObject();
     }
 
     private Object readObject() {
@@ -115,28 +125,48 @@ public class Connection implements Closeable {
                     throw new KeycafeConnectionException("Unknown reply: " + (char) b);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new KeycafeExeception(e);
         }
-        return null;
     }
 
-    private byte[] readSimpleString() {
-        return null;
+    private String readSimpleString() {
+        return inputStream.readLine();
     }
 
     private byte[] readBulkReply() {
-        return null;
+        final int len = (int) inputStream.readLongCRLF();
+        if (len == -1) {
+            return null;
+        }
+        final byte[] read = new byte[len];
+
+        try {
+            inputStream.read(read);
+            inputStream.read();
+            inputStream.read();
+            return read;
+        } catch (IOException e) {
+            throw new KeycafeConnectionException(e);
+        }
     }
 
     private List<Object> readArray() {
-        return null;
+        final int num = (int) inputStream.readLongCRLF();
+        if (num == -1) {
+            return null;
+        }
+        final List<Object> result = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            result.add(readObject());
+        }
+        return result;
     }
 
     private Long readInteger() {
-        return null;
+        return inputStream.readLongCRLF();
     }
 
     private void readError() {
-
+        throw new KeycafeServerException(inputStream.readLine());
     }
 }
