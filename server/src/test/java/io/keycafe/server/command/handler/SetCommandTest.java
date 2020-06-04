@@ -7,7 +7,9 @@ import io.keycafe.common.Protocol.Command;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.keycafe.server.command.ReplyMessage;
+import io.keycafe.server.command.reply.BulkStringMessage;
+import io.keycafe.server.command.reply.ErrorMessage;
+import io.keycafe.server.command.reply.ReplyMessage;
 import org.junit.Test;
 
 public class SetCommandTest {
@@ -19,7 +21,7 @@ public class SetCommandTest {
         args[1] = "abc".getBytes();
         SetCommand s = new SetCommand(null, null);
         ReplyMessage reply = s.run(1, args);
-        assertEquals(reply, ReplyMessage.WrongArgcMessage);
+        assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
     @Test
@@ -29,7 +31,7 @@ public class SetCommandTest {
         args[1] = "abc".getBytes();
         SetCommand s = new SetCommand(null, null);
         ReplyMessage reply = s.run(3, args);
-        assertEquals(reply, ReplyMessage.WrongArgcMessage);
+        assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
     @Test
@@ -38,7 +40,7 @@ public class SetCommandTest {
         args[0] = new byte[]{(byte) Command.SET.ordinal()};
         SetCommand s = new SetCommand(null, null);
         ReplyMessage reply = s.run(2, args);
-        assertEquals(reply, ReplyMessage.WrongArgcMessage);
+        assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
     @Test
@@ -51,7 +53,7 @@ public class SetCommandTest {
         args[2] = "VALUE".getBytes();
         SetCommand s = new SetCommand(map, map2);
         ReplyMessage reply = s.run(3, args);
-        assertEquals(reply.message(), new ReplyMessage(null).message());
+        assertEquals(reply.message(), new BulkStringMessage(null).message());
     }
 
     @Test
@@ -68,6 +70,6 @@ public class SetCommandTest {
         args[2] = "VALUE".getBytes();
         SetCommand s = new SetCommand(map, map2);
         ReplyMessage reply = s.run(3, args);
-        assertEquals(reply.message(), new ReplyMessage("PASTVAL").message());
+        assertEquals(reply.message(), new BulkStringMessage("PASTVAL").message());
     }
 }

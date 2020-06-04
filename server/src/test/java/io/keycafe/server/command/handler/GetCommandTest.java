@@ -7,7 +7,10 @@ import io.keycafe.common.Protocol.Command;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.keycafe.server.command.ReplyMessage;
+import io.keycafe.server.command.reply.BulkStringMessage;
+import io.keycafe.server.command.reply.ErrorMessage;
+import io.keycafe.server.command.reply.ReplyMessage;
+import io.keycafe.server.command.reply.StringMessage;
 import org.junit.Test;
 
 public class GetCommandTest {
@@ -19,7 +22,7 @@ public class GetCommandTest {
         args[1] = "abc".getBytes();
         GetCommand g = new GetCommand(null);
         ReplyMessage reply = g.run(1, args);
-        assertEquals(reply, ReplyMessage.WrongArgcMessage);
+        assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
     @Test
@@ -29,7 +32,7 @@ public class GetCommandTest {
         args[1] = "abc".getBytes();
         GetCommand g = new GetCommand(null);
         ReplyMessage reply = g.run(3, args);
-        assertEquals(reply, ReplyMessage.WrongArgcMessage);
+        assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
     @Test
@@ -40,7 +43,7 @@ public class GetCommandTest {
         args[1] = "no_key".getBytes();
         GetCommand g = new GetCommand(map);
         ReplyMessage reply = g.run(2, args);
-        assertEquals(reply.message(), ReplyMessage.NoKeyFoundMessage.message());
+        assertEquals(reply.message(), BulkStringMessage.NoKeyFoundMessage.message());
     }
 
     @Test
@@ -55,6 +58,6 @@ public class GetCommandTest {
         args[1] = "TEST".getBytes();
         GetCommand g = new GetCommand(map);
         ReplyMessage reply = g.run(2, args);
-        assertEquals(reply.message(), new ReplyMessage("VALUE").message());
+        assertEquals(reply.message(), new BulkStringMessage("VALUE").message());
     }
 }

@@ -8,7 +8,7 @@ public class Protocol {
     public static final String KEYCAFE_CHARSET = "UTF-8";
 
     public enum Command {
-        SET, GET, DELETE;
+        SET, GET, DELETE, CLUSTER;
 
         private final byte[] raw;
 

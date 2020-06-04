@@ -1,5 +1,6 @@
 package io.keycafe.server.services;
 
+import io.keycafe.server.cluster.ClusterNode;
 import io.keycafe.server.network.decoder.ByteToCommandDecoder;
 import io.keycafe.server.network.encoder.ReplyEncoder;
 import io.keycafe.server.slot.LocalSlot;
@@ -15,6 +16,7 @@ import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
 import java.net.InetSocketAddress;
+import java.util.Map;
 
 public class SlotService implements Service {
     private final EventLoopGroup bossGroup = new NioEventLoopGroup(1);
@@ -22,9 +24,11 @@ public class SlotService implements Service {
 
     private final int port;
     private final LocalSlot lslot;
+    private final Map<String, ClusterNode> nodeMap;
 
-    public SlotService(LocalSlot lslot, int port) {
+    public SlotService(LocalSlot lslot, Map<String, ClusterNode> nodeMap, int port) {
         this.lslot = lslot;
+        this.nodeMap = nodeMap;
         this.port = port;
     }
 
@@ -41,7 +45,7 @@ public class SlotService implements Service {
 
                         pipeline.addLast(new ByteToCommandDecoder());
                         pipeline.addLast(new ReplyEncoder());
-                        pipeline.addLast(new SlotChannelHandler(lslot));
+                        pipeline.addLast(new SlotChannelHandler(lslot, nodeMap));
                     }
                 });
 

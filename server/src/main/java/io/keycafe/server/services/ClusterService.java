@@ -48,7 +48,7 @@ public class ClusterService implements Service {
                 });
 
         ChannelFuture f = bootstrap.bind(new InetSocketAddress("localhost", port));
-        f.sync().channel().closeFuture().sync();
+//        f.sync().channel().closeFuture().sync();
     }
 
     @Override

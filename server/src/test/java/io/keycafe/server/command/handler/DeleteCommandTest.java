@@ -5,7 +5,10 @@ import io.keycafe.common.Protocol.Command;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.keycafe.server.command.ReplyMessage;
+import io.keycafe.server.command.reply.BulkStringMessage;
+import io.keycafe.server.command.reply.ErrorMessage;
+import io.keycafe.server.command.reply.ReplyMessage;
+import io.keycafe.server.command.reply.StringMessage;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -19,7 +22,7 @@ public class DeleteCommandTest {
         args[1] = "abc".getBytes();
         DeleteCommand d = new DeleteCommand(null);
         ReplyMessage reply = d.run(1, args);
-        assertEquals(reply, ReplyMessage.WrongArgcMessage);
+        assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
     @Test
@@ -28,7 +31,7 @@ public class DeleteCommandTest {
         args[0] = new byte[]{(byte) Command.DELETE.ordinal()};
         DeleteCommand d = new DeleteCommand(null);
         ReplyMessage reply = d.run(2, args);
-        assertEquals(reply, ReplyMessage.WrongArgcMessage);
+        assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
     @Test
@@ -39,7 +42,7 @@ public class DeleteCommandTest {
         args[1] = "no_key".getBytes();
         DeleteCommand d = new DeleteCommand(map);
         ReplyMessage reply = d.run(2, args);
-        assertEquals(reply.message(), ReplyMessage.OkMessage.message());
+        assertEquals(reply.message(), StringMessage.OkMessage.message());
     }
 
     @Test
@@ -54,6 +57,6 @@ public class DeleteCommandTest {
         args[1] = "TEST".getBytes();
         DeleteCommand d = new DeleteCommand(map);
         ReplyMessage reply = d.run(2, args);
-        assertEquals(reply.message(), new ReplyMessage("VALUE").message());
+        assertEquals(reply.message(), new BulkStringMessage("VALUE").message());
     }
 }

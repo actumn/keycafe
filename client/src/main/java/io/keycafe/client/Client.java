@@ -46,4 +46,13 @@ public class Client extends Connection implements Commands {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void clusterSlots() {
+        try {
+            this.sendCommand(Protocol.Command.CLUSTER, "slots".getBytes(KEYCAFE_CHARSET));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

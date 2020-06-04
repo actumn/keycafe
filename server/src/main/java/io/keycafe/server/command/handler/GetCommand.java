@@ -1,7 +1,10 @@
 package io.keycafe.server.command.handler;
 
 import io.keycafe.common.Protocol;
-import io.keycafe.server.command.ReplyMessage;
+import io.keycafe.server.command.reply.BulkStringMessage;
+import io.keycafe.server.command.reply.ErrorMessage;
+import io.keycafe.server.command.reply.ReplyMessage;
+import io.keycafe.server.command.reply.StringMessage;
 
 import java.util.Map;
 
@@ -16,15 +19,15 @@ public class GetCommand implements CommandRunnable {
     @Override
     public ReplyMessage run(int argc, byte[][] argv) throws Exception {
         if (argc != 2) {
-            return ReplyMessage.WrongArgcMessage;
+            return ErrorMessage.WrongArgcMessage;
         }
 
         String val = map.get(new String(argv[1], Protocol.KEYCAFE_CHARSET));
+
         if (val != null) {
-            return new ReplyMessage(val);
+            return new BulkStringMessage(val);
         } else {
-            return ReplyMessage.NoKeyFoundMessage;
+            return BulkStringMessage.NoKeyFoundMessage;
         }
-//      throw new RuntimeException("Not implemented yet.");
     }
 }

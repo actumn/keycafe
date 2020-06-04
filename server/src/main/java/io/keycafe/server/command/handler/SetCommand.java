@@ -1,7 +1,10 @@
 package io.keycafe.server.command.handler;
 
 import io.keycafe.common.Protocol;
-import io.keycafe.server.command.ReplyMessage;
+import io.keycafe.server.command.reply.BulkStringMessage;
+import io.keycafe.server.command.reply.ErrorMessage;
+import io.keycafe.server.command.reply.ReplyMessage;
+import io.keycafe.server.command.reply.StringMessage;
 
 import java.util.Map;
 
@@ -18,7 +21,7 @@ public class SetCommand implements CommandRunnable {
     @Override
     public ReplyMessage run(int argc, byte[][] argv) throws Exception {
         if (argc != 3) {
-            return ReplyMessage.WrongArgcMessage;
+            return ErrorMessage.WrongArgcMessage;
         }
 
         String k = new String(argv[1], Protocol.KEYCAFE_CHARSET);
@@ -27,9 +30,9 @@ public class SetCommand implements CommandRunnable {
         tMap.put(k, System.currentTimeMillis());
 
         if (val != null) {
-            return new ReplyMessage(val);
+            return new BulkStringMessage(val);
         } else {
-            return ReplyMessage.OkMessage;
+            return StringMessage.OkMessage;
         }
     }
 }

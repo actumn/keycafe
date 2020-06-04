@@ -36,10 +36,11 @@ public class Server implements Service {
     public Server(Configuration config) {
 //        final InetAddress inetAddress = SystemInfo.defaultNonLoopbackIpV4Address();
 //        final String ipAddressOrHostname = inetAddress != null ? inetAddress.getHostAddress() : "localhost";
+        final String ipAddressOrHostname = "localhost";
 
         this.myself = new ClusterNode(
                 RandomUtils.getRandomHex(NODE_NAMELEN),
-                "localhost",
+                ipAddressOrHostname,
                 config.getClusterPort());
         this.clusterState = new ClusterState(this.myself);
         this.lslot = new LocalSlot(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
@@ -47,7 +48,7 @@ public class Server implements Service {
 
         this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
         this.cluster = new ClusterService(this, config.getClusterPort());
-        this.slot = new SlotService(lslot, config.getServicePort());
+        this.slot = new SlotService(lslot, clusterState.getNodeMap(), config.getServicePort());
     }
 
     @Override
@@ -60,7 +61,7 @@ public class Server implements Service {
         coordination.run();
         coordination.registerClusterNode(myself.getNodeId(), myself);
         cluster.run();
-//        slot.run();
+        slot.run();
     }
 
     @Override

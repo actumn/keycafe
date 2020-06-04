@@ -2,7 +2,7 @@ package io.keycafe.server.command.handler;
 
 import io.keycafe.common.Protocol;
 import io.keycafe.server.command.CommandMessage;
-import io.keycafe.server.command.ReplyMessage;
+import io.keycafe.server.command.reply.ReplyMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -27,10 +27,9 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
         ReplyMessage reply = commandMap.get(command).run(msg.getArgc(), msg.getArgv());
         ctx.writeAndFlush(reply);
 
-
-        System.out.println("argc: " + msg.getArgc());
-        System.out.println("argv[0]: " + argv[0][0]);
-        for (int i = 1; i < msg.getArgc(); i++)
-            System.out.println("argv[" + i + "]: " + new String(argv[i], Protocol.KEYCAFE_CHARSET));
+//        System.out.println("argc: " + msg.getArgc());
+//        System.out.println("argv[0]: " + argv[0][0]);
+//        for (int i = 1; i < msg.getArgc(); i++)
+//            System.out.println("argv[" + i + "]: " + new String(argv[i], Protocol.KEYCAFE_CHARSET));
     }
 }
