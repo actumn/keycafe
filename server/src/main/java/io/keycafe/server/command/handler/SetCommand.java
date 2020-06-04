@@ -26,13 +26,9 @@ public class SetCommand implements CommandRunnable {
 
         String k = new String(argv[1], Protocol.KEYCAFE_CHARSET);
         String v = new String(argv[2], Protocol.KEYCAFE_CHARSET);
-        String val = kvMap.put(k, v);
+        kvMap.put(k, v);
         tMap.put(k, System.currentTimeMillis());
 
-        if (val != null) {
-            return new BulkStringMessage(val);
-        } else {
-            return StringMessage.OkMessage;
-        }
+        return StringMessage.OkMessage;
     }
 }

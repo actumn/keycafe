@@ -15,6 +15,8 @@ public class ArrayMessage implements ReplyMessage {
         StringBuilder result = new StringBuilder();
         result.append('*');
         result.append(replyMessageList.size());
+        result.append('\r');
+        result.append('\n');
 
         for(ReplyMessage message : replyMessageList) {
             result.append(message.message());

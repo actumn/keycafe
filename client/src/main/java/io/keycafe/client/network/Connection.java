@@ -1,13 +1,14 @@
 package io.keycafe.client.network;
 
+import io.keycafe.client.exceptions.KeycafeConnectionException;
+import io.keycafe.client.stream.KeycafeInputStream;
+import io.keycafe.client.stream.KeycafeOutputStream;
 import io.keycafe.common.Protocol;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.List;
 
 public class Connection implements Closeable {
 
@@ -15,8 +16,8 @@ public class Connection implements Closeable {
     private final int port;
 
     private Socket socket;
-    private BufferedInputStream inputStream;
-    private BufferedOutputStream outputStream;
+    private KeycafeInputStream inputStream;
+    private KeycafeOutputStream outputStream;
 
     public Connection() {
         this("localhost");
@@ -42,8 +43,8 @@ public class Connection implements Closeable {
 
                 socket.connect(new InetSocketAddress(host, port));
 
-                inputStream = new BufferedInputStream(socket.getInputStream());
-                outputStream = new BufferedOutputStream(socket.getOutputStream());
+                inputStream = new KeycafeInputStream(socket.getInputStream());
+                outputStream = new KeycafeOutputStream(socket.getOutputStream());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -84,15 +85,58 @@ public class Connection implements Closeable {
 
 
     public String getBulkReply() {
+        final byte[] result = (byte[]) readObject();
+        if (null == result) {
+            return null;
+        }
         try {
-            final byte[] len = new byte[1];
-            inputStream.read(len);
-            final byte[] result = new byte[len[0]];
-            inputStream.read(result, 0, len[0]);
             return new String(result, Protocol.KEYCAFE_CHARSET);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private Object readObject() {
+        try {
+            byte b = (byte) inputStream.read();
+            switch (b) {
+                case '+':
+                    return readSimpleString();
+                case '$':
+                    return readBulkReply();
+                case '*':
+                    return readArray();
+                case ':':
+                    return readInteger();
+                case '-':
+                    readError();
+                default:
+                    throw new KeycafeConnectionException("Unknown reply: " + (char) b);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private byte[] readSimpleString() {
+        return null;
+    }
+
+    private byte[] readBulkReply() {
+        return null;
+    }
+
+    private List<Object> readArray() {
+        return null;
+    }
+
+    private Long readInteger() {
+        return null;
+    }
+
+    private void readError() {
+
     }
 }

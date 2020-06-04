@@ -41,6 +41,7 @@ public class Server implements Service {
         this.myself = new ClusterNode(
                 RandomUtils.getRandomHex(NODE_NAMELEN),
                 ipAddressOrHostname,
+                config.getServicePort(),
                 config.getClusterPort());
         this.clusterState = new ClusterState(this.myself);
         this.lslot = new LocalSlot(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
@@ -76,7 +77,7 @@ public class Server implements Service {
             return;
 
         ClusterLink link = new ClusterLink();
-        link.connect(clusterNode.getHostAddress(), clusterNode.getPort(), new ClusterMessageHandler(this));
+        link.connect(clusterNode.getHostAddress(), clusterNode.getCport(), new ClusterMessageHandler(this));
         link.sendPing(myself);
         clusterNode.link(link);
         clusterState.putNode(clusterNode.getNodeId(), clusterNode);

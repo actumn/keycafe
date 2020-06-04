@@ -8,22 +8,24 @@ public class ClusterNode {
     private final String nodeId;
     private final String hostAddress;
     private final int port;
+    private final int cport;
     private ClusterLink link;
     private final byte[] myslots = new byte[Server.CLUSTER_SLOTS / 8];
 
-    public ClusterNode(String nodeId, String hostAddress, int port) {
+    public ClusterNode(String nodeId, String hostAddress, int port, int cport) {
         this.nodeId = nodeId;
         this.hostAddress = hostAddress;
         this.port = port;
+        this.cport = cport;
 
         Arrays.fill(this.myslots, (byte) 0);
     }
 
     public ClusterNodeConfig config() {
-        return new ClusterNodeConfig(nodeId, hostAddress, port);
+        return new ClusterNodeConfig(nodeId, hostAddress, port, cport);
     }
     public static ClusterNode fromConfig(ClusterNodeConfig config) {
-        return new ClusterNode(config.getNodeId(), config.getHostAddress(), config.getPort());
+        return new ClusterNode(config.getNodeId(), config.getHostAddress(), config.getPort(), config.getCport());
     }
 
     public void link(ClusterLink link) {
@@ -44,6 +46,10 @@ public class ClusterNode {
 
     public int getPort() {
         return port;
+    }
+
+    public int getCport() {
+        return cport;
     }
 
     public byte[] getMyslots() {
