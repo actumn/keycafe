@@ -1,8 +1,10 @@
 package io.keycafe.client;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.List;
 
-public class Keycafe implements KeycafeCommands {
+public class Keycafe implements KeycafeCommands, Closeable {
     private final Client client;
 
     public Keycafe() {
@@ -45,11 +47,12 @@ public class Keycafe implements KeycafeCommands {
         client.connect();
     }
 
-    public void disconnect() {
-        client.close();
-    }
-
     public Client getClient() {
         return client;
+    }
+
+    @Override
+    public void close() {
+        client.close();
     }
 }

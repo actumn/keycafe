@@ -1,6 +1,6 @@
 package io.keycafe.client.exceptions;
 
-public class KeycafeConnectionException extends RuntimeException {
+public class KeycafeConnectionException extends KeycafeExeception {
     public KeycafeConnectionException(String message) {
         super(message);
     }

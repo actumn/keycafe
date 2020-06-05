@@ -14,7 +14,7 @@ public class ReplyEncoder extends MessageToByteEncoder<ReplyMessage> {
     @Override
     protected void encode(ChannelHandlerContext ctx, ReplyMessage msg, ByteBuf out) throws Exception {
         String message = msg.message();
-        logger.info("reply message - {}", message);
+        logger.debug("reply message - {}", message);
         out.writeBytes(message.getBytes(Protocol.KEYCAFE_CHARSET));
     }
 }

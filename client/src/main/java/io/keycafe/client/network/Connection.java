@@ -5,6 +5,7 @@ import io.keycafe.client.exceptions.KeycafeExeception;
 import io.keycafe.client.exceptions.KeycafeServerException;
 import io.keycafe.client.stream.KeycafeInputStream;
 import io.keycafe.client.stream.KeycafeOutputStream;
+import io.keycafe.client.util.StringCodec;
 import io.keycafe.common.Protocol;
 
 import java.io.*;
@@ -49,7 +50,7 @@ public class Connection implements Closeable {
                 inputStream = new KeycafeInputStream(socket.getInputStream());
                 outputStream = new KeycafeOutputStream(socket.getOutputStream());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new KeycafeConnectionException(e);
             }
         }
     }
@@ -70,7 +71,7 @@ public class Connection implements Closeable {
             }
             outputStream.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KeycafeConnectionException(e);
         }
     }
 
@@ -81,7 +82,7 @@ public class Connection implements Closeable {
                 outputStream.flush();
                 socket.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new KeycafeConnectionException(e);
             }
         }
     }
@@ -95,12 +96,8 @@ public class Connection implements Closeable {
         if (null == result) {
             return null;
         }
-        try {
-            return new String(result, Protocol.KEYCAFE_CHARSET);
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return null;
+
+        return StringCodec.decode(result);
     }
 
     public List<Object> getArray() {
