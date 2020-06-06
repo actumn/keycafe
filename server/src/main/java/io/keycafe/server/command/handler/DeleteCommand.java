@@ -30,4 +30,9 @@ public class DeleteCommand implements CommandRunnable {
             return StringMessage.OkMessage;
         }
     }
+
+    @Override
+    public int keyIndex() {
+        return 1;
+    }
 }

@@ -59,4 +59,9 @@ public class ClusterCommand implements CommandRunnable {
 
         return ErrorMessage.SyntaxErrorMessage;
     }
+
+    @Override
+    public int keyIndex() {
+        return 0;
+    }
 }

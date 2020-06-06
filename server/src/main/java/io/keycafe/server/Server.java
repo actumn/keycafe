@@ -49,7 +49,7 @@ public class Server implements Service {
 
         this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
         this.cluster = new ClusterService(this, config.getClusterPort());
-        this.slot = new SlotService(lslot, clusterState.getNodeMap(), config.getServicePort());
+        this.slot = new SlotService(lslot, clusterState, myself, config.getServicePort());
     }
 
     @Override
@@ -117,11 +117,11 @@ public class Server implements Service {
 
             for (int i = 0; i < CLUSTER_SLOTS; i++) {
                 if (BitmapUtils.bitmapTestBit(msg.getMyslots(), i)) {
-                    if (clusterState.getSlots()[i] == sender)
+                    if (clusterState.getNodeBySlot(i) == sender)
                         continue;
 
-                    if (clusterState.getSlots()[i] != null)
-                        clusterDelSlot(clusterState.getSlots()[i], i);
+                    if (clusterState.getNodeBySlot(i) != null)
+                        clusterDelSlot(clusterState.getNodeBySlot(i), i);
 
                     clusterAddSlot(sender, i);
                 }

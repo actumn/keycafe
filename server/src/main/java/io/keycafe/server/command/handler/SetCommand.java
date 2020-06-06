@@ -31,4 +31,9 @@ public class SetCommand implements CommandRunnable {
 
         return StringMessage.OkMessage;
     }
+
+    @Override
+    public int keyIndex() {
+        return 1;
+    }
 }

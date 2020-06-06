@@ -30,4 +30,9 @@ public class GetCommand implements CommandRunnable {
             return BulkStringMessage.NoKeyFoundMessage;
         }
     }
+
+    @Override
+    public int keyIndex() {
+        return 1;
+    }
 }

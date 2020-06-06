@@ -30,7 +30,7 @@ public class ClusterState {
         slots[slot] = node;
     }
 
-    public ClusterNode[] getSlots() {
-        return slots;
+    public ClusterNode getNodeBySlot(int slot) {
+        return slots[slot];
     }
 }
