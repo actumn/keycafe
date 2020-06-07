@@ -1,7 +1,6 @@
 package io.keycafe.client;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 public class KeycafeClusterConnectionHandler implements Closeable  {
     private final KeycafeClusterInfoCache cache;
@@ -20,6 +19,10 @@ public class KeycafeClusterConnectionHandler implements Closeable  {
         keycafe.connect();
         cache.discoverCluster(keycafe);
         keycafe.close();
+    }
+
+    public void renewSlotCache(Keycafe keycafe) {
+        cache.renewClusterSlots(keycafe);
     }
 
     @Override

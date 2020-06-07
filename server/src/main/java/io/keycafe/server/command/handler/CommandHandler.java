@@ -9,10 +9,14 @@ import io.keycafe.server.command.reply.ErrorMessage;
 import io.keycafe.server.command.reply.ReplyMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
 public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> {
+    private static final Logger logger = LogManager.getLogger(CommandHandler.class);
+
     private final Map<Protocol.Command, CommandRunnable> commandMap;
     private final ClusterState cluster;
     private final ClusterNode myself;
@@ -44,6 +48,7 @@ public class CommandHandler extends SimpleChannelInboundHandler<CommandMessage> 
             int hashSlot = ClusterCRC16.getSlot(key);
             ClusterNode node = cluster.getNodeBySlot(hashSlot);
             if (node != myself) {
+                logger.info("MOVED {} {} {}:{}", key, hashSlot, node.getHostAddress(), node.getPort());
                 ctx.writeAndFlush(new ErrorMessage(
                         String.format("MOVED %d %s:%d", hashSlot, node.getHostAddress(), node.getPort())));
                 return;

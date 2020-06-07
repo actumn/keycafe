@@ -2,6 +2,7 @@ package io.keycafe.client.network;
 
 import io.keycafe.client.exceptions.KeycafeConnectionException;
 import io.keycafe.client.exceptions.KeycafeExeception;
+import io.keycafe.client.exceptions.KeycafeRedirectException;
 import io.keycafe.client.exceptions.KeycafeServerException;
 import io.keycafe.client.stream.KeycafeInputStream;
 import io.keycafe.client.stream.KeycafeOutputStream;
@@ -164,6 +165,11 @@ public class Connection implements Closeable {
     }
 
     private void readError() {
+        String message = inputStream.readLine();
+        if (message.startsWith("MOVED")) {
+//            String[] movedInfo = message.split(" ");
+            throw new KeycafeRedirectException(message);
+        }
         throw new KeycafeServerException(inputStream.readLine());
     }
 }

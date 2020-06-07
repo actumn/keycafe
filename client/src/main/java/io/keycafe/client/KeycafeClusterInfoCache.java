@@ -1,9 +1,7 @@
 package io.keycafe.client;
 
 import io.keycafe.client.util.StringCodec;
-import io.keycafe.common.Protocol;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +30,12 @@ public class KeycafeClusterInfoCache {
         }
     }
 
+    public void renewClusterSlots(Keycafe keycafe) {
+        discoverCluster(keycafe);
+    }
+
+
+
     public Keycafe setupNodeIfNotExists(String host, int port) {
         String nodeKey = host + ":" + port;
         Keycafe existingNode = nodes.get(nodeKey);
@@ -52,7 +56,7 @@ public class KeycafeClusterInfoCache {
 
     private List<Integer> getAssignedSlotArray(int low, int high) {
         List<Integer> result = new ArrayList<>();
-        for (int slot = 0; slot <= high; slot++) {
+        for (int slot = low; slot <= high; slot++) {
             result.add(slot);
         }
         return result;
