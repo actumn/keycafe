@@ -1,5 +1,6 @@
-package io.keycafe.server;
+package io.keycafe.server.utils;
 
+import io.keycafe.server.utils.RandomUtils;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 

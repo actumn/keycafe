@@ -7,6 +7,8 @@ import io.keycafe.server.cluster.ClusterState;
 import io.keycafe.server.cluster.handler.ClusterMessageHandler;
 import io.keycafe.server.services.*;
 import io.keycafe.server.slot.LocalSlot;
+import io.keycafe.server.utils.BitmapUtils;
+import io.keycafe.server.utils.RandomUtils;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

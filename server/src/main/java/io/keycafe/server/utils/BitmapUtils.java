@@ -1,4 +1,4 @@
-package io.keycafe.server;
+package io.keycafe.server.utils;
 
 public final class BitmapUtils {
     private BitmapUtils() {}

@@ -1,5 +1,6 @@
-package io.keycafe.server;
+package io.keycafe.server.utils;
 
+import io.keycafe.server.utils.SystemInfo;
 import org.junit.Test;
 
 import java.net.InetAddress;
