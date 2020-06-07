@@ -4,7 +4,7 @@
   <br/>
   <br/>
   <p>
-    The simple, lightweight, distributed, reliable in-memory key-value store. <br/>
+    The simple, lightweight, distributed in-memory key-value store. <br/>
     Focusing on supporiting scalable, high-availability application.  
   </p>
   <p>
@@ -16,7 +16,35 @@
 
 ---
 ## Introduction
-Keycafe is blah blah blah
+Keycafe is blah blah blah.  
+For research purpose.
 
-## License
- - MIT
+## Modules
+- coordinate-server
+- keycafe-server
+- keycafe-client
+
+
+## Build and run
+### Gradle
+```
+```
+### Docker
+```
+```
+
+## Client sample code
+```java
+public static void main() {}
+```
+
+## Specification
+### Keycafe Protocol
+
+### Keycafe cluster
+
+### Coordination
+
+### Cluster Protocol
+
+
