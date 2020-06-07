@@ -1,6 +1,7 @@
 package io.keycafe.client;
 
 import io.keycafe.client.network.Connection;
+import io.keycafe.client.util.StringCodec;
 import io.keycafe.common.Protocol;
 
 import java.io.IOException;
@@ -22,28 +23,21 @@ public class Client extends Connection implements Commands {
 
     @Override
     public void get(String key) {
-        try {
-            this.sendCommand(Protocol.Command.GET, key.getBytes(KEYCAFE_CHARSET));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.sendCommand(Protocol.Command.GET, StringCodec.encode(key));
     }
 
     @Override
     public void set(String key, String value) {
-        try {
-            this.sendCommand(Protocol.Command.SET, key.getBytes(KEYCAFE_CHARSET), value.getBytes(KEYCAFE_CHARSET));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.sendCommand(Protocol.Command.SET, StringCodec.encode(key), StringCodec.encode(value));
     }
 
     @Override
     public void delete(String key) {
-        try {
-            this.sendCommand(Protocol.Command.DELETE, key.getBytes(KEYCAFE_CHARSET));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.sendCommand(Protocol.Command.DELETE, StringCodec.encode(key));
+    }
+
+    @Override
+    public void clusterSlots() {
+        this.sendCommand(Protocol.Command.CLUSTER, StringCodec.encode("slots"));
     }
 }

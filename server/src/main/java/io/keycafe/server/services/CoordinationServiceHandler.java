@@ -3,6 +3,7 @@ package io.keycafe.server.services;
 import com.google.gson.Gson;
 import io.keycafe.server.Server;
 import io.keycafe.server.cluster.ClusterNode;
+import io.keycafe.server.cluster.ClusterNodeConfig;
 import kr.ac.konkuk.ccslab.cm.event.*;
 import kr.ac.konkuk.ccslab.cm.event.handler.CMAppEventHandler;
 import kr.ac.konkuk.ccslab.cm.info.CMInfo;
@@ -95,8 +96,16 @@ public class CoordinationServiceHandler implements CMAppEventHandler {
             String nodeId = userEvent.getEventField(CMInfo.CM_STR, "node-id");
             String config = userEvent.getEventField(CMInfo.CM_STR, "node-config");
 
-            final ClusterNode nodeConfiguration = new Gson().fromJson(config, ClusterNode.class);
-            server.connect(nodeConfiguration);
+            final ClusterNodeConfig nodeConfig = new Gson().fromJson(config, ClusterNodeConfig.class);
+            server.meet(ClusterNode.fromConfig(nodeConfig));
+            return;
+        }
+
+        if ("rebalance-slot".equals(userEvent.getStringID())) {
+            int low = Integer.parseInt(userEvent.getEventField(CMInfo.CM_INT, "low"));
+            int high = Integer.parseInt(userEvent.getEventField(CMInfo.CM_INT, "high"));
+
+            server.rebalanceSlots(low, high);
             return;
         }
 

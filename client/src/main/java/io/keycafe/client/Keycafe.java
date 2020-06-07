@@ -1,6 +1,10 @@
 package io.keycafe.client;
 
-public class Keycafe implements KeycafeCommands {
+import java.io.Closeable;
+import java.io.IOException;
+import java.util.List;
+
+public class Keycafe implements KeycafeCommands, Closeable {
     private final Client client;
 
     public Keycafe() {
@@ -24,24 +28,31 @@ public class Keycafe implements KeycafeCommands {
     @Override
     public String set(String key, String value) {
         client.set(key, value);
-        return client.getBulkReply();
+        return client.getSimpleString();
     }
 
     @Override
     public String delete(String key) {
         client.delete(key);
-        return client.getBulkReply();
+        return client.getSimpleString();
+    }
+
+    @Override
+    public List<Object> clusterSlots() {
+        client.clusterSlots();
+        return client.getArray();
     }
 
     public void connect() {
         client.connect();
     }
 
-    public void disconnect() {
-        client.close();
-    }
-
     public Client getClient() {
         return client;
+    }
+
+    @Override
+    public void close() {
+        client.close();
     }
 }

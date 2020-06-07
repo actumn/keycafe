@@ -1,13 +1,19 @@
 package io.keycafe.client.network;
 
+import io.keycafe.client.exceptions.KeycafeConnectionException;
+import io.keycafe.client.exceptions.KeycafeExeception;
+import io.keycafe.client.exceptions.KeycafeRedirectException;
+import io.keycafe.client.exceptions.KeycafeServerException;
+import io.keycafe.client.stream.KeycafeInputStream;
+import io.keycafe.client.stream.KeycafeOutputStream;
+import io.keycafe.client.util.StringCodec;
 import io.keycafe.common.Protocol;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.Closeable;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Connection implements Closeable {
 
@@ -15,8 +21,8 @@ public class Connection implements Closeable {
     private final int port;
 
     private Socket socket;
-    private BufferedInputStream inputStream;
-    private BufferedOutputStream outputStream;
+    private KeycafeInputStream inputStream;
+    private KeycafeOutputStream outputStream;
 
     public Connection() {
         this("localhost");
@@ -42,10 +48,10 @@ public class Connection implements Closeable {
 
                 socket.connect(new InetSocketAddress(host, port));
 
-                inputStream = new BufferedInputStream(socket.getInputStream());
-                outputStream = new BufferedOutputStream(socket.getOutputStream());
+                inputStream = new KeycafeInputStream(socket.getInputStream());
+                outputStream = new KeycafeOutputStream(socket.getOutputStream());
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new KeycafeConnectionException(e);
             }
         }
     }
@@ -66,7 +72,7 @@ public class Connection implements Closeable {
             }
             outputStream.flush();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new KeycafeConnectionException(e);
         }
     }
 
@@ -77,22 +83,93 @@ public class Connection implements Closeable {
                 outputStream.flush();
                 socket.close();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new KeycafeConnectionException(e);
             }
         }
     }
 
+    public String getSimpleString() {
+        return (String) readObject();
+    }
 
     public String getBulkReply() {
-        try {
-            final byte[] len = new byte[1];
-            inputStream.read(len);
-            final byte[] result = new byte[len[0]];
-            inputStream.read(result, 0, len[0]);
-            return new String(result, Protocol.KEYCAFE_CHARSET);
-        } catch (IOException e) {
-            e.printStackTrace();
+        final byte[] result = (byte[]) readObject();
+        if (null == result) {
+            return null;
         }
-        return null;
+
+        return StringCodec.decode(result);
+    }
+
+    public List<Object> getArray() {
+        return (List<Object>) readObject();
+    }
+
+    private Object readObject() {
+        try {
+            byte b = (byte) inputStream.read();
+            switch (b) {
+                case '+':
+                    return readSimpleString();
+                case '$':
+                    return readBulkReply();
+                case '*':
+                    return readArray();
+                case ':':
+                    return readInteger();
+                case '-':
+                    readError();
+                default:
+                    throw new KeycafeConnectionException("Unknown reply: " + (char) b);
+            }
+        } catch (IOException e) {
+            throw new KeycafeExeception(e);
+        }
+    }
+
+    private String readSimpleString() {
+        return inputStream.readLine();
+    }
+
+    private byte[] readBulkReply() {
+        final int len = (int) inputStream.readLongCRLF();
+        if (len == -1) {
+            return null;
+        }
+        final byte[] read = new byte[len];
+
+        try {
+            inputStream.read(read);
+            inputStream.read();
+            inputStream.read();
+            return read;
+        } catch (IOException e) {
+            throw new KeycafeConnectionException(e);
+        }
+    }
+
+    private List<Object> readArray() {
+        final int num = (int) inputStream.readLongCRLF();
+        if (num == -1) {
+            return null;
+        }
+        final List<Object> result = new ArrayList<>(num);
+        for (int i = 0; i < num; i++) {
+            result.add(readObject());
+        }
+        return result;
+    }
+
+    private Long readInteger() {
+        return inputStream.readLongCRLF();
+    }
+
+    private void readError() {
+        String message = inputStream.readLine();
+        if (message.startsWith("MOVED")) {
+//            String[] movedInfo = message.split(" ");
+            throw new KeycafeRedirectException(message);
+        }
+        throw new KeycafeServerException(inputStream.readLine());
     }
 }
