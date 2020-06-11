@@ -49,7 +49,7 @@ $ docker build -f docker/server/Dockerfile .
 ```
 - docker-compose build
 ```shell script
-$  docker-compose -f examples/docker-compose.yml build
+$  docker-compose -f docker/docker-compose.yml build
 ```
 
 ## Client sample code
