@@ -62,7 +62,7 @@ public class SlotService implements Service {
                     }
                 });
 
-        ChannelFuture f = bootstrap.bind(new InetSocketAddress("localhost", port));
+        ChannelFuture f = bootstrap.bind(port);
         f.sync().channel().closeFuture().sync();
     }
 

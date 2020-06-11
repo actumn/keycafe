@@ -17,4 +17,4 @@ COPY --from=builder /app/coordinate-server/build/libs/coordinate-server-0.0.1.ja
 COPY --from=builder /app/coordinate-server/cm-server.conf .
 COPY --from=builder /app/coordinate-server/cm-session1.conf .
 EXPOSE 7777
-ENTRYPOINT ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar"]

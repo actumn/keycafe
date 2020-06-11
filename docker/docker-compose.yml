@@ -5,18 +5,25 @@ services:
     build:
       context: ../
       dockerfile: ./docker/coordinate-server/Dockerfile
-    restart: always
-    ports:
-      - 2181:2181
   keycafe1:
     build:
       context: ../
       dockerfile: ./docker/server/Dockerfile
     depends_on:
       - coordinator
-#  keycafe2:
-#    build:
-#      context: .
-#      dockerfile: ../docker/server/Dockerfile
+    environment:
+      - COORDINATOR=coordinator
+    ports:
+    - 9814:9814
+  keycafe2:
+    build:
+      context: ../
+      dockerfile: ./docker/server/Dockerfile
+    depends_on:
+      - coordinator
+    environment:
+      - COORDINATOR=coordinator
+    ports:
+      - 9815:9814
 
 

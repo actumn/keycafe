@@ -16,5 +16,5 @@ WORKDIR /app
 COPY --from=builder /app/server/build/libs/server-0.0.1.jar app.jar
 COPY --from=builder /app/server/cm-client.conf .
 COPY --from=builder /app/server/config.yaml .
-EXPOSE 7777
-ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE 9814
+CMD ["java", "-jar", "app.jar"]

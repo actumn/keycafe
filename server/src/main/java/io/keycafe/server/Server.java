@@ -9,10 +9,12 @@ import io.keycafe.server.services.*;
 import io.keycafe.server.slot.LocalSlot;
 import io.keycafe.server.utils.BitmapUtils;
 import io.keycafe.server.utils.RandomUtils;
+import io.keycafe.server.utils.SystemInfo;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.net.InetAddress;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,10 +37,9 @@ public class Server implements Service {
     private final LocalSlot lslot;
 
 
-    public Server(Configuration config) {
-//        final InetAddress inetAddress = SystemInfo.defaultNonLoopbackIpV4Address();
-//        final String ipAddressOrHostname = inetAddress != null ? inetAddress.getHostAddress() : "localhost";
-        final String ipAddressOrHostname = "localhost";
+    public Server(Configuration config, Map<String, String> options) {
+        final InetAddress inetAddress = SystemInfo.defaultNonLoopbackIpV4Address();
+        final String ipAddressOrHostname = inetAddress != null ? inetAddress.getHostAddress() : "localhost";
 
         this.myself = new ClusterNode(
                 RandomUtils.getRandomHex(NODE_NAMELEN),
@@ -49,7 +50,7 @@ public class Server implements Service {
         this.lslot = new LocalSlot(new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
 
 
-        this.coordination = new CoordinationService(new CoordinationServiceHandler(this));
+        this.coordination = new CoordinationService(new CoordinationServiceHandler(this), options.get("COORDINATOR"));
         this.cluster = new ClusterService(this, config.getClusterPort());
         this.slot = new SlotService(lslot, clusterState, myself, config.getServicePort());
     }

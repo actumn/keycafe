@@ -42,14 +42,14 @@ $ java -jar coordinate-server/build/libs/coordinate-server-0.0.1.jar
 $ java -jar server/build/libs/server-0.0.1.jar
 ```
 ### Docker
-- Build
+- Dockerfile
 ```shell script
 $ docker build -f docker/coordinate-server/Dockerfile .
 $ docker build -f docker/server/Dockerfile .
 ```
-- docker-compose
+- docker-compose build
 ```shell script
-$  docker-compose -f examples/docker-compose.yml up
+$  docker-compose -f examples/docker-compose.yml build
 ```
 
 ## Client sample code
@@ -64,7 +64,6 @@ public class Main() {
         keycafe.close();
     }
 }
-
 ```
 
 ## Specification
