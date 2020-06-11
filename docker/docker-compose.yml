@@ -1,0 +1,22 @@
+version: "3.1"
+
+services:
+  coordinator:
+    build:
+      context: ../
+      dockerfile: ./docker/coordinate-server/Dockerfile
+    restart: always
+    ports:
+      - 2181:2181
+  keycafe1:
+    build:
+      context: ../
+      dockerfile: ./docker/server/Dockerfile
+    depends_on:
+      - coordinator
+#  keycafe2:
+#    build:
+#      context: .
+#      dockerfile: ../docker/server/Dockerfile
+
+

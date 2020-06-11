@@ -42,7 +42,14 @@ $ java -jar coordinate-server/build/libs/coordinate-server-0.0.1.jar
 $ java -jar server/build/libs/server-0.0.1.jar
 ```
 ### Docker
+- Build
+```shell script
+$ docker build -f docker/coordinate-server/Dockerfile .
+$ docker build -f docker/server/Dockerfile .
 ```
+- docker-compose
+```shell script
+$  docker-compose -f examples/docker-compose.yml up
 ```
 
 ## Client sample code
