@@ -2,6 +2,22 @@ plugins {
     id 'java'
 }
 
+group 'keycafe'
+version '0.0.1'
+sourceCompatibility = 1.8
+
+jar {
+    from {
+        configurations.runtime.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version
+        )
+    }
+}
+
 dependencies {
     compile project(':common')
     testCompile group: 'junit', name: 'junit', version: '4.12'

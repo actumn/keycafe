@@ -10,6 +10,7 @@ import java.util.Map;
 import io.keycafe.server.command.reply.BulkStringMessage;
 import io.keycafe.server.command.reply.ErrorMessage;
 import io.keycafe.server.command.reply.ReplyMessage;
+import io.keycafe.server.command.reply.StringMessage;
 import org.junit.Test;
 
 public class SetCommandTest {
@@ -30,7 +31,7 @@ public class SetCommandTest {
         args[0] = new byte[]{(byte) Command.SET.ordinal()};
         args[1] = "abc".getBytes();
         SetCommand s = new SetCommand(null, null);
-        ReplyMessage reply = s.run(3, args);
+        ReplyMessage reply = s.run(2, args);
         assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
@@ -45,6 +46,7 @@ public class SetCommandTest {
 
     @Test
     public void test4() throws Exception {
+        // Arrange
         Map<String, String> map = new HashMap<>();
         Map<String, Long> map2 = new HashMap<>();
         byte[][] args = new byte[3][];
@@ -52,12 +54,17 @@ public class SetCommandTest {
         args[1] = "TEST".getBytes();
         args[2] = "VALUE".getBytes();
         SetCommand s = new SetCommand(map, map2);
+
+        // Action
         ReplyMessage reply = s.run(3, args);
-        assertEquals(reply.message(), new BulkStringMessage(null).message());
+
+        // Assert
+        assertEquals(StringMessage.OkMessage.message(), reply.message());
     }
 
     @Test
     public void test5() throws Exception {
+        // Arrange
         Map<String, String> map = new HashMap<String, String>() {
             {
                 put("TEST", "PASTVAL");
@@ -69,7 +76,11 @@ public class SetCommandTest {
         args[1] = "TEST".getBytes();
         args[2] = "VALUE".getBytes();
         SetCommand s = new SetCommand(map, map2);
+
+        // Action
         ReplyMessage reply = s.run(3, args);
-        assertEquals(reply.message(), new BulkStringMessage("PASTVAL").message());
+
+        // Assert
+        assertEquals(StringMessage.OkMessage.message(), reply.message());
     }
 }

@@ -27,15 +27,37 @@ For research purpose.
 
 ## Build and run
 ### Gradle
+- Build
+```shell script
+$ ./gradlew build
 ```
+- Make Executable jar
+```shell script
+$ ./gradlew :coordinate-server:jar
+$ ./gradlew :server:jar
+```
+- run
+```shell script
+$ java -jar coordinate-server/build/libs/coordinate-server-0.0.1.jar
+$ java -jar server/build/libs/server-0.0.1.jar
 ```
 ### Docker
 ```
 ```
 
 ## Client sample code
+- Cluster client
 ```java
-public static void main() {}
+public class Main() {
+    public static void main(String[] args) {
+        KeycafeCluster keycafe = new KeycafeCluster("localhost", 9814);
+        System.out.println(keycafe.set("example_key", "KEY"));  // "ok"
+        System.out.println(keycafe.get("example_key"));         // "KEY"
+        System.out.println(keycafe.get("no_key"));              // null
+        keycafe.close();
+    }
+}
+
 ```
 
 ## Specification

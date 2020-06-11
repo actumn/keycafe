@@ -3,6 +3,9 @@ plugins {
     id 'application'
 }
 
+mainClassName = 'io.keycafe.examples.Console'
+sourceCompatibility = 1.8
+
 dependencies {
     compile project(':client')
     testCompile group: 'junit', name: 'junit', version: '4.12'

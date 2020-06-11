@@ -27,10 +27,15 @@ public class DeleteCommandTest {
 
     @Test
     public void test2() throws Exception {
+        // Arrange
         byte[][] args = new byte[1][];
         args[0] = new byte[]{(byte) Command.DELETE.ordinal()};
         DeleteCommand d = new DeleteCommand(null);
-        ReplyMessage reply = d.run(2, args);
+
+        // Action
+        ReplyMessage reply = d.run(1, args);
+
+        // Assert
         assertEquals(reply, ErrorMessage.WrongArgcMessage);
     }
 
