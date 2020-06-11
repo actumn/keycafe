@@ -1,4 +1,4 @@
-package io.keycafe.server;
+package io.keycafe.server.utils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

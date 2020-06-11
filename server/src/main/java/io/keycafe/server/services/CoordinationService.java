@@ -3,6 +3,7 @@ package io.keycafe.server.services;
 import com.google.gson.Gson;
 import io.keycafe.server.cluster.ClusterNode;
 import io.keycafe.server.cluster.ClusterNodeConfig;
+import io.netty.util.internal.StringUtil;
 import kr.ac.konkuk.ccslab.cm.event.CMUserEvent;
 import kr.ac.konkuk.ccslab.cm.info.CMInfo;
 import kr.ac.konkuk.ccslab.cm.stub.CMClientStub;
@@ -14,8 +15,10 @@ public class CoordinationService implements Service {
     private final CMClientStub clientStub = new CMClientStub();
     private final CoordinationServiceHandler handler;
 
-    public CoordinationService(CoordinationServiceHandler handler) {
+    public CoordinationService(CoordinationServiceHandler handler, String host) {
         this.handler = handler;
+        if (!StringUtil.isNullOrEmpty(host))
+            clientStub.setServerAddress(host);
     }
 
     @Override

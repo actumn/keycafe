@@ -1,0 +1,29 @@
+version: "3.1"
+
+services:
+  coordinator:
+    build:
+      context: ../
+      dockerfile: ./docker/coordinate-server/Dockerfile
+  keycafe1:
+    build:
+      context: ../
+      dockerfile: ./docker/server/Dockerfile
+    depends_on:
+      - coordinator
+    environment:
+      - COORDINATOR=coordinator
+    ports:
+    - 9814:9814
+  keycafe2:
+    build:
+      context: ../
+      dockerfile: ./docker/server/Dockerfile
+    depends_on:
+      - coordinator
+    environment:
+      - COORDINATOR=coordinator
+    ports:
+      - 9815:9814
+
+

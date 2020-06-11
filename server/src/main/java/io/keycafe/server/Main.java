@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Map;
 
 public class Main {
 
@@ -12,8 +13,9 @@ public class Main {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         final File configFile = Paths.get("config.yaml").toFile();
         Configuration config = mapper.readValue(configFile, Configuration.class);
+        Map<String, String> options = System.getenv();
 
-        Server server = new Server(config);
+        Server server = new Server(config, options);
         server.run();
     }
 }

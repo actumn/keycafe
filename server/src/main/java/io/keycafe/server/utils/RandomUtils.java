@@ -1,4 +1,4 @@
-package io.keycafe.server;
+package io.keycafe.server.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

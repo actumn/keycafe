@@ -4,7 +4,7 @@
   <br/>
   <br/>
   <p>
-    The simple, lightweight, distributed, reliable in-memory key-value store. <br/>
+    The simple, lightweight, distributed in-memory key-value store. <br/>
     Focusing on supporiting scalable, high-availability application.  
   </p>
   <p>
@@ -16,7 +16,63 @@
 
 ---
 ## Introduction
-Keycafe is blah blah blah
+Keycafe is blah blah blah.  
+For research purpose.
 
-## License
- - MIT
+## Modules
+- coordinate-server
+- keycafe-server
+- keycafe-client
+
+
+## Build and run
+### Gradle
+- Build
+```shell script
+$ ./gradlew build
+```
+- Make Executable jar
+```shell script
+$ ./gradlew :coordinate-server:jar
+$ ./gradlew :server:jar
+```
+- run
+```shell script
+$ java -jar coordinate-server/build/libs/coordinate-server-0.0.1.jar
+$ java -jar server/build/libs/server-0.0.1.jar
+```
+### Docker
+- Dockerfile
+```shell script
+$ docker build -f docker/coordinate-server/Dockerfile .
+$ docker build -f docker/server/Dockerfile .
+```
+- docker-compose build
+```shell script
+$  docker-compose -f docker/docker-compose.yml build
+```
+
+## Client sample code
+- Cluster client
+```java
+public class Main() {
+    public static void main(String[] args) {
+        KeycafeCluster keycafe = new KeycafeCluster("localhost", 9814);
+        System.out.println(keycafe.set("example_key", "KEY"));  // "ok"
+        System.out.println(keycafe.get("example_key"));         // "KEY"
+        System.out.println(keycafe.get("no_key"));              // null
+        keycafe.close();
+    }
+}
+```
+
+## Specification
+### Keycafe Protocol
+
+### Keycafe cluster
+
+### Coordination
+
+### Cluster Protocol
+
+

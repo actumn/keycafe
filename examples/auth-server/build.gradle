@@ -3,6 +3,9 @@ plugins {
     id 'application'
 }
 
+mainClassName = 'io.keycafe.example.Main'
+sourceCompatibility = 1.8
+
 dependencies {
     compile project(':client')
     compile group: 'io.netty', name: 'netty-all', version: '4.1.48.Final'
