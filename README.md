@@ -39,6 +39,18 @@ Keycafe의 목표는 메모리에 키 - 값 엔트리를 저장하여, 기존의
  
 ### Keycafe Client
 Because Keycafe uses its own TCP binary protocol, Keycafe client provides a simple method to communicate Keycafe server. 
+- Example code 
+```java
+public class Main() {
+    public static void main(String[] args) {
+        KeycafeCluster keycafe = new KeycafeCluster("localhost", 9814);
+        System.out.println(keycafe.set("example_key", "KEY"));  // "ok"
+        System.out.println(keycafe.get("example_key"));         // "KEY"
+        System.out.println(keycafe.get("no_key"));              // null
+        keycafe.close();
+    }
+}
+```
 
 ### Example (auth-server, auth-web)
 ![IMAGE](./docs/images/example-auth-web.png)
@@ -74,21 +86,6 @@ $ docker build -f docker/server/Dockerfile .
 $  docker-compose -f docker/docker-compose.yml build
 ```
 
-
-## Client sample code
-- Cluster client
-```java
-public class Main() {
-    public static void main(String[] args) {
-        KeycafeCluster keycafe = new KeycafeCluster("localhost", 9814);
-        System.out.println(keycafe.set("example_key", "KEY"));  // "ok"
-        System.out.println(keycafe.get("example_key"));         // "KEY"
-        System.out.println(keycafe.get("no_key"));              // null
-        keycafe.close();
-    }
-}
-```
-
 ## Internal specification
 ### Keycafe commands
 - Request
@@ -97,6 +94,7 @@ public class Main() {
 ### Keycafe cluster
 - TCP connection bus
 - Keycafe cluster messages
+- Client keycafe cluster discover
 
 ### Coordination
 - Register node information.
