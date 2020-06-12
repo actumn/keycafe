@@ -54,6 +54,7 @@ public class Main() {
 
 ### Example (auth-server, auth-web)
 ![IMAGE](./docs/images/example-auth-web.png)
+
 `auth-server` is a simple authentication server to show how to use Keycafe key-value store. Displaying a simple auth with `auth-web`, the example provides the web-based use case in an application level. 
 
 ## Build and run
