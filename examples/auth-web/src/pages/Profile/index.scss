@@ -1,0 +1,63 @@
+.profile-container{
+  width:100%;
+  height:100%;
+  text-align: center;
+}
+
+.profile-block{
+  width:60%;
+  margin:0 auto;
+  margin-top: 150px;
+  display: inline-block;
+}
+
+.profile-box{
+  width: 150px;
+  height: 150px; 
+  border-radius: 70%;
+  overflow: hidden;
+  margin: auto;
+}
+
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-info{
+  width:28%;
+  margin: auto;
+}
+
+.profile-name {
+  margin-top: 25px;
+  margin-bottom: 25px;
+  font-size: 2rem;
+}
+
+.profile-email{
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.profile-country{
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.profile-job{
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.profile-logout-btn{
+  margin-top: 20px;
+  border-radius: 10px;
+  width: 8%;
+  height: 30px;
+  border: 0.5px solid #8e8e8e;
+  background-color: #8e8e8e;
+  color: white;
+  margin-right: 5px;
+}

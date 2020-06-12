@@ -1,7 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
+import StoreProvider from './providers/StoreProvider';
 import './styles/index.scss';
-import '@babel/polyfill';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <StoreProvider>
+    <App />
+  </StoreProvider>,
+  document.getElementById('root')
+);

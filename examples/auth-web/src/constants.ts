@@ -1,5 +1,9 @@
-/* eslint-disable import/prefer-default-export */
+export enum STORES {
+  AUTH_STORE = 'authStore',
+  USER_STORE = 'userStore'
+}
+
 export enum PAGE_PATHS {
-  SIGNUP = '/signup',
-  SIGNIN = '/signin'
+  SIGNIN = '/login',
+  PROFILE = '/profile'
 }
