@@ -59,7 +59,9 @@ public class Main() {
 
 ## Build and run
 ```shell script
-$ ./build.sh
+$ sh build.sh
+$ sh run-coordinate.sh
+$ sh run-server.sh
 ```
 ### Gradle
 - Build
