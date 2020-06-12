@@ -1,6 +1,6 @@
 package com.keycafe.auth.springboot.service;
 
-import io.keycafe.client.Keycafe;
+import io.keycafe.client.KeycafeCluster;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -9,16 +9,15 @@ import org.springframework.context.annotation.Scope;
 
 public class KeycafeService {
 
-    private Keycafe keycafe;
+    private KeycafeCluster keycafe;
 
     public KeycafeService(){
-        this.keycafe =  new Keycafe();
-        keycafe.connect();
+        this.keycafe =  new KeycafeCluster("localhost", 9814);;
     }
 
     @Bean
     @Scope(value = "singleton")
-    public Keycafe getKeycafe() {
+    public KeycafeCluster getKeycafe() {
         return this.keycafe;
     }
 }

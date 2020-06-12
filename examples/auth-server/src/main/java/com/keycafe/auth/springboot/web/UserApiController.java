@@ -3,7 +3,7 @@ package com.keycafe.auth.springboot.web;
 import com.keycafe.auth.springboot.service.KeycafeService;
 import com.keycafe.auth.springboot.service.UserService;
 import com.keycafe.auth.springboot.web.dto.UserResponseDto;
-import io.keycafe.client.Keycafe;
+import io.keycafe.client.KeycafeCluster;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -25,7 +25,7 @@ public class UserApiController {
 
         System.out.println(authToken);
 
-        Keycafe keycafe = keycafeService.getKeycafe();
+        KeycafeCluster keycafe = keycafeService.getKeycafe();
         String email = keycafe.get(authToken);
         System.out.println("23   " + email);
 

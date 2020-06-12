@@ -6,7 +6,7 @@ import com.keycafe.auth.springboot.utility.TokenKey;
 import com.keycafe.auth.springboot.web.dto.BasicException;
 import com.keycafe.auth.springboot.web.dto.LoginRequestDto;
 import com.keycafe.auth.springboot.web.dto.LoginResponseDto;
-import io.keycafe.client.Keycafe;
+import io.keycafe.client.KeycafeCluster;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -49,7 +49,7 @@ public class AuthApiController {
         HttpHeaders responseHeaders = new HttpHeaders();
 
         TokenKey tokenKey = new TokenKey(email, System.currentTimeMillis());
-        Keycafe keycafe = keycafeService.getKeycafe();
+        KeycafeCluster keycafe = keycafeService.getKeycafe();
         keycafe.set(tokenKey.getKey(), email);
 
         response.setToken(tokenKey.getKey());
