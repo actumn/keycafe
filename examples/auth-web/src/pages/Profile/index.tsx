@@ -31,10 +31,7 @@ function Profile(props:InjectedProps & RouteComponentProps){
   }
 
   useEffect(() => {
-    const getUserData = async() => {
-     await userStore.getUserProfile();
-    }
-    getUserData();
+   userStore.getUserProfile();
   })
 
   const gender = userStore.gender === 'Female' ? 'female' : 'male'
