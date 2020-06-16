@@ -63,7 +63,7 @@ $ sh build.sh
 $ sh run-coordinate.sh
 $ sh run-server.sh config.yaml
 $ sh run-example-server.sh
-$ sh run-example.web.sh
+$ sh run-example-web.sh
 # and try with email: 'limpett0@smugmug.com', password: 'pCHecmGBZ7'
 # for detail information, see: examples/auth-server/src/main/resources/data.sql
 ```
