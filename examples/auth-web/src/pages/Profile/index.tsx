@@ -32,7 +32,7 @@ function Profile(props:InjectedProps & RouteComponentProps){
 
   useEffect(() => {
    userStore.getUserProfile();
-  })
+  }, [] )
 
   const gender = userStore.gender === 'Female' ? 'female' : 'male'
   const url = `/assets/photos/profile_${gender}.jpg`;

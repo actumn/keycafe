@@ -17,4 +17,4 @@ COPY --from=builder /app/server/build/libs/server-0.0.1.jar app.jar
 COPY --from=builder /app/server/cm-client.conf .
 COPY --from=builder /app/server/config.yaml .
 EXPOSE 9814
-CMD ["java", "-jar", "app.jar"]
+CMD ["java", "-jar", "app.jar", "config.yaml"]
