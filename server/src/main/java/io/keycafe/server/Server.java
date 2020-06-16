@@ -87,7 +87,7 @@ public class Server implements Service {
     }
 
     public void rebalanceSlots(int low, int high) {
-        logger.info("clusterAddSlots slot: low {}, high {}", low, high);
+//        logger.info("clusterAddSlots slot: low {}, high {}", low, high);
 
         for (int i = 0; i < CLUSTER_SLOTS; i++) {
             if (low <= i && i < high) {
@@ -130,8 +130,8 @@ public class Server implements Service {
                 }
             }
 
-            logger.info("ping-pong result - myself: {}", Arrays.toString(myself.getMyslots()));
-            logger.info("ping-pong result - sender: {}", Arrays.toString(sender.getMyslots()));
+//            logger.info("ping-pong result - myself: {}", Arrays.toString(myself.getMyslots()));
+//            logger.info("ping-pong result - sender: {}", Arrays.toString(sender.getMyslots()));
         }
     }
 
@@ -147,7 +147,7 @@ public class Server implements Service {
 
 
     public void cron() {
-        logger.info("cron start");
+//        logger.info("cron start");
 //        expireCron();
         clusterCron();
 //        logger.info("cron end");
@@ -166,7 +166,7 @@ public class Server implements Service {
     private long iteration = 0;
     private void clusterCron() {
         iteration += 1;
-        if (iteration % 10 == 0) {
+        if (iteration % 100 == 0) {
             for (Map.Entry<String, ClusterNode> nodeEntry : clusterState.getNodeMap().entrySet()) {
                 ClusterNode node = nodeEntry.getValue();
                 if (node == myself) continue;

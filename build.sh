@@ -14,5 +14,7 @@ cp coordinate-server/cm-session1.conf build
 cp server/build/libs/server-${version}.jar build/server.jar
 cp server/cm-client.conf build
 cp server/config.yaml build
+cp server/config2.yaml build
+cp server/config3.yaml build
 
 cp examples/auth-server/build/libs/auth-server-${version}.jar build/auth-server.jar

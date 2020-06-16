@@ -61,7 +61,7 @@ public class Main() {
 ```shell script
 $ sh build.sh
 $ sh run-coordinate.sh
-$ sh run-server.sh
+$ sh run-server.sh config.yaml
 $ sh run-example-server.sh
 $ sh run-example.web.sh
 # and try with email: 'limpett0@smugmug.com', password: 'pCHecmGBZ7'
@@ -80,7 +80,7 @@ $ ./gradlew :server:jar
 - run
 ```shell script
 $ java -jar coordinate-server/build/libs/coordinate-server-0.0.1.jar
-$ java -jar server/build/libs/server-0.0.1.jar
+$ java -jar server/build/libs/server-0.0.1.jar config.yaml
 ```
 ### Docker
 - Dockerfile

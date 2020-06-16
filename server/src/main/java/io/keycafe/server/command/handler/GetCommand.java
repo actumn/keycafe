@@ -4,11 +4,13 @@ import io.keycafe.common.Protocol;
 import io.keycafe.server.command.reply.BulkStringMessage;
 import io.keycafe.server.command.reply.ErrorMessage;
 import io.keycafe.server.command.reply.ReplyMessage;
-import io.keycafe.server.command.reply.StringMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Map;
 
 public class GetCommand implements CommandRunnable {
+    private static final Logger logger = LogManager.getLogger(GetCommand.class);
 
     private Map<String, String> map;
 
@@ -22,7 +24,9 @@ public class GetCommand implements CommandRunnable {
             return ErrorMessage.WrongArgcMessage;
         }
 
-        String val = map.get(new String(argv[1], Protocol.KEYCAFE_CHARSET));
+        String key = new String(argv[1], Protocol.KEYCAFE_CHARSET);
+        String val = map.get(key);
+        logger.info("get key: {} - result: {}", key, val);
 
         if (val != null) {
             return new BulkStringMessage(val);
